@@ -135,6 +135,56 @@ button.row:hover{border-color:var(--line);background:var(--surface)}
 .tb em{font-style:normal;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
 .fail{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:#2f3a48;z-index:4}
 .fail div{background:#fff;border-radius:14px;padding:16px 18px;max-width:380px}
+.askcard{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--accent-soft);cursor:pointer;text-align:left;color:var(--fg)}
+.askcard:hover{border-color:var(--accent)}
+.askcard .tx{flex:1;min-width:0}
+.askcard b{display:block;font-family:var(--f-display);font-size:14.5px}
+.askcard small{display:block;color:var(--muted);font-size:12px;line-height:1.35}
+.tabs{display:flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:12px;margin-top:14px;flex:none}
+.tabs button{flex:1;border:0;background:none;padding:7px 10px;border-radius:9px;font-weight:600;font-size:13px;cursor:pointer;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(16,24,40,.12)}
+.panel.chatmode{overflow:hidden}
+.chat{display:flex;flex-direction:column;flex:1;min-height:0;margin-top:12px}
+.chathead{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:8px;min-height:22px}
+.linkbtn{border:0;background:none;color:var(--accent);font:600 12px var(--f-body);cursor:pointer;padding:2px 4px;letter-spacing:0;text-transform:none;border-radius:6px;white-space:nowrap;flex:none}
+.chathead span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.linkbtn:hover{background:var(--accent-soft)}
+.msgs{flex:1;min-height:150px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:2px 2px 10px;overscroll-behavior:contain}
+.msg{display:flex;gap:8px;align-items:flex-end;max-width:100%}
+.msg.me{justify-content:flex-end}
+.msg .bc{min-width:0;max-width:calc(100% - 34px);display:flex;flex-direction:column;align-items:flex-start}
+.msg .b{padding:9px 12px;border-radius:14px;background:var(--surface-2);line-height:1.45;min-width:0;max-width:100%;overflow-wrap:anywhere}
+.msg.me .b{background:var(--accent);color:#fff;border-bottom-right-radius:4px;white-space:pre-wrap;max-width:85%}
+.msg.ai .b{border-bottom-left-radius:4px}
+.msg .b.err{background:none;border:1px dashed var(--line);color:var(--muted)}
+.b p{margin:0 0 6px}.b p:last-child{margin-bottom:0}
+.b ul{margin:2px 0 6px;padding-left:18px}.b ul:last-child{margin-bottom:0}.b li{margin:2px 0}
+.typing{display:inline-flex;gap:4px;padding:5px 2px}
+.typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.mnote{font-size:11.5px;color:var(--muted);margin-top:4px}
+.mact{display:flex;gap:4px;margin-top:2px}
+.mact button{border:0;background:none;color:var(--muted);font:500 11.5px var(--f-body);cursor:pointer;padding:3px 6px;border-radius:6px}
+.mact button:hover{color:var(--accent);background:var(--surface-2)}
+.sugs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;flex:none}
+.sugs button{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:6px 11px;font-size:12.5px;cursor:pointer;text-align:left}
+.sugs button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.sugs button:disabled{opacity:.5;cursor:default}
+.composer{display:flex;align-items:flex-end;gap:6px;border:1px solid var(--line);border-radius:14px;padding:6px 6px 6px 12px;background:var(--surface);flex:none}
+.composer:focus-within{border-color:var(--accent)}
+.composer textarea{flex:1;min-width:0;border:0;outline:0;background:none;resize:none;font:inherit;color:var(--fg);max-height:120px;padding:7px 0;line-height:1.4}
+.composer textarea::placeholder{color:var(--muted)}
+.ib{width:34px;height:34px;border-radius:10px;border:0;display:grid;place-items:center;cursor:pointer;background:var(--surface-2);color:var(--fg);flex:none}
+.ib.send{background:var(--accent);color:#fff}
+.ib.send.stop{background:var(--fg);color:var(--surface)}
+.ib.rec{background:var(--late);color:#fff;animation:pulse 1.2s infinite}
+.ib:disabled{opacity:.45;cursor:default}
+@keyframes pulse{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--late) 25%,transparent)}}
+.cnote{color:var(--muted);font-size:11.5px;margin:6px 2px 0;flex:none}
+.cpart{color:var(--fg);font-size:12.5px;font-style:italic;margin:6px 2px 0;opacity:.7;flex:none}
+.tag.talk::after{content:"";position:absolute;right:-5px;top:-5px;width:10px;height:10px;border-radius:50%;background:#2a59d1;box-shadow:0 0 0 3px rgba(42,89,209,.25);animation:ping 1s infinite}
+@keyframes ping{50%{transform:scale(1.35)}}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media (max-width:1180px){
   .app{grid-template-columns:minmax(0,1fr) 330px}
@@ -154,8 +204,10 @@ button.row:hover{border-color:var(--line);background:var(--surface)}
   .hint{display:none}
   .stats{display:none}
   .hello{max-width:calc(100% - 70px)}
+  .panel.chatmode{overflow:visible}
+  .msgs{max-height:55vh}
 }
-@media (prefers-reduced-motion:reduce){.tag{transition:none}}
+@media (prefers-reduced-motion:reduce){.tag{transition:none}.typing span,.ib.rec,.tag.talk::after{animation:none}}
 </style>
 
 <div class="app">
@@ -203,7 +255,7 @@ button.row:hover{border-color:var(--line);background:var(--surface)}
 'use strict';
 const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
 const $ = s => document.querySelector(s);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 /* ---------------- Datos (foto del 23 nov 2026) ---------------- */
 const SNAP = new Date(2026, 10, 23);
@@ -351,6 +403,7 @@ function renderSummary(){
       <div class="kpi week"><b>${COUNTS.week}</b><span>Esta semana</span></div>
       <div class="kpi"><b>${COUNTS.later + COUNTS.none}</b><span>Más adelante o sin fecha</span></div>
     </div>
+    <button class="askcard" type="button" id="askEnrique">${avatar(byId('enrique'), 42)}<span class="tx"><b>Pregúntale a Enrique</b><small>Tu coordinador conoce los ${COUNTS.total} pendientes del equipo.</small></span>${ICON.chev}</button>
     <section><h3>Urgente</h3><ul class="items">${urgent.map(i => itemRow(i, true)).join('')}</ul></section>
     <section><h3>Esta semana</h3><ul class="items">${week.map(i => itemRow(i, true)).join('')}</ul></section>
     <section><h3>Fechas clave</h3><ul class="items">
@@ -359,9 +412,116 @@ function renderSummary(){
     </ul></section>
     <section><div class="links"><a class="btn pri" href="${SHEET}1XfGCRN1upZsfr0ZAN2Lp-w_dHbUpBMMfcPjOKhY7ysU/edit" target="_blank" rel="noopener">Abrir la lista completa</a></div></section>`;
   panel.querySelectorAll('[data-agent]').forEach(b => b.addEventListener('click', () => select(b.dataset.agent, 'panel')));
+  $('#askEnrique').addEventListener('click', () => { TAB = 'chat'; select('enrique', 'panel'); });
 }
-function renderAgent(a){
-  const st = STATUS[a.status];
+/* ---------------- Chat con cada agente ---------------- */
+const ICON = {
+  send:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>',
+  stop:'<svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor"/></svg>',
+  mic:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  chev:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>'
+};
+const GREET = {
+  enrique:'Hola, Luis David. Soy Enrique, el coordinador. Veo los pendientes de todo el equipo. ¿Qué quieres revisar?',
+  jeniffer:'Hola, Luis David. Soy Jeniffer, de no conformidades. Todavía no tengo conectado el registro de NC, pero te ayudo a preparar cómo darles seguimiento.',
+  lilliana:'Hola, Luis David. Soy Lilliana. Revisé tus correos del 9 al 23 de noviembre. Pregúntame qué te toca o pídeme un borrador.',
+  ezequiel:'Hola, Luis David. Soy Ezequiel, de inventarios. Tengo las diferencias de tubos, el acero y las fechas de los ajustes. ¿Por dónde empezamos?',
+  alejandro:'Hola, Luis David. Soy Alejandro, de AppSheets. Tengo las órdenes de cambio y las alertas que llegaron a tu correo.',
+  fabiola:'Hola, Luis David. Soy Fabiola, de dashboards. Aún no sé qué dashboards usa la planta, pero podemos pensar en indicadores.'
+};
+const SUGS = {
+  enrique:['¿Cómo está el equipo hoy?', '¿Qué es lo más urgente esta semana?', '¿Qué agente configuro primero?'],
+  jeniffer:['¿Qué necesitas para empezar?', '¿Cómo le darías seguimiento a una no conformidad?'],
+  lilliana:['¿Qué me toca hoy?', '¿Qué correos debo responder primero?', 'Arma la estructura de la minuta semanal'],
+  ezequiel:['¿Cómo preparo el comité del miércoles?', 'Redacta el seguimiento a Kattia por los tubos', '¿Qué falta para los ajustes del 5 de diciembre?'],
+  alejandro:['¿Qué hago con la OC-03 vencida?', '¿Qué revisarías de la alerta de OC-18?'],
+  fabiola:['¿Cómo calcularías el KPI del Filtro 3?', '¿Qué indicadores propones para producción?']
+};
+const DAYS_L = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const MONTHS_L = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const fmtLong = s => { const d = pd(s); return `${DAYS_L[d.getDay()]} ${d.getDate()} de ${MONTHS_L[d.getMonth()]}`; };
+const EXTRA = {
+  enrique:[
+    'Estado del equipo: Lilliana está activa bajo demanda (revisa el correo cuando Luis David se lo pide). Ezequiel tiene su ficha y su hoja de control listas. Jeniffer, Alejandro y Fabiola están por configurar. Tú, Enrique, te configuras cuando haya al menos dos agentes trabajando.',
+    'Pendientes por estado al 23/11: 1 vencido, 2 vencen hoy, 8 esta semana, 4 más adelante y 5 sin fecha (20 en total). Ezequiel tiene 9, Alejandro 5, Lilliana 5, Fabiola 1 y Jeniffer 0.',
+    'Fechas clave: viernes 5 de diciembre, límite para enviar los ajustes de inventario de noviembre (las solicitudes de baja van hasta el día 5 de cada mes); lunes 7 de diciembre, auditoría externa de EY, donde Luis David es el responsable de apoyo.',
+    'Reuniones: lunes 23 a la 1:00 p. m., levantamiento de requerimientos de identificación con código; martes 24 a las 3:00 p. m., cotización de etiquetas; miércoles 25 a las 11:00 a. m., Comité de inventarios HMS.'
+  ],
+  jeniffer:[
+    'Todavía no está conectado el registro de no conformidades (NC): no sabes en qué AppSheet o Sheet se registran.',
+    'Ojo: en los correos de Kattia Hidalgo, "NC" significa nota de crédito, no no conformidad.',
+    'Osvaldo Cubillo organizó reuniones de no conformidades: "NC\'S" el jueves 12/11 a la 1:30 p. m. y "Seguimiento - NC torón Nave 3" el viernes 13/11 a las 9:00 a. m.',
+    'Karla Villalta implementó el 12/11 el Procedimiento de Control de Calidad y Despacho de Producto Conforme, con un chat de WhatsApp para el filtro final; ya detectaron productos que no debían salir a ruta y oportunidades de mejora en la fijación de cargas.'
+  ],
+  lilliana:[
+    'Revisaste 196 hilos de correo del 9 al 23 de noviembre; ignoraste boletines, promociones, reportes OEE y avisos automáticos.',
+    'Reuniones: lunes 23 a la 1:00 p. m., levantamiento de requerimientos de identificación con código (con Jimmy Brenes; organiza Steven Hernández). La reunión de cotización de etiquetas del lunes a las 11:00 a. m. se canceló y pasó al martes 24 a las 3:00 p. m. Miércoles 25 a las 11:00 a. m., Comité de inventarios HMS.',
+    'Minuta de Seguimiento de Operaciones: Luis David la envió el 10/11 y el 16/11 al equipo de Operaciones con el archivo MINUTA SEGUIMIENTO OPERACIONES 2026.xlsx. No conoces el contenido del archivo. Toca la de esta semana.',
+    'Mariana Sánchez escribió por Google Chat el 20/11: "Igual no son muchos los que están pendientes Luis David". No se sabe a qué pendientes se refiere.',
+    'La lista completa está en la hoja "Lista maestra de pendientes - Lilliana" en Drive.'
+  ],
+  ezequiel:[
+    'Diferencias de la toma física del 14/11 (material, descripción, sistema/físico, ajuste): 10085218 TUBO 1000MM X 2.50 C-76 C-III B 62/61 (-1); 10085219 TUBO 300MM X 1.25 C-76 C-III B 118/109 (-9); 10086607 TUBO 400MM X 2.50 C-76 C-III B 131/130 (-1); 10085231 TUBO 500MM X 1.25 C-76 C-III B 26/20 (-6); 10085247 TUBO 500MM X 2.50 C-14 C-1 41/56 (+15); 10085232 TUBO 500MM X 2.50 C-76 C-III B 158/148 (-10); 10085234 TUBO 600MM X 2.50 C-76 C-III B 88/87 (-1); 10085236 TUBO 800MM X 1.25 C-76 C-III B 64/66 (+2); 10085237 TUBO 800MM X 2.50 C-76 C-III B 208/209 (+1); 10085239 TUBO 900MM X 2.50 C-76 C-III B 202/201 (-1); 10085241 TUBO MC 1200MM X 2.50 C-76 C-III B 58/57 (-1); 10085244 TUBO MC 1800MM X 2.50 C-76 C-III B 53/50 (-3).',
+    'Luis David le envió esas diferencias a Kattia Hidalgo el 16/11 (con copia a Daniela Jiménez, Erika Barbosa y José Alfredo Rojas) para validar si corresponden a refactura o a ajuste. Kattia no ha respondido ese correo.',
+    'El 18/11 Kattia reenvió el caso del pedido Meco 4500174247: el tubo 10085234 (600x2.50) tenía 6 en sistema y 26 físicos, sin notas de crédito pendientes; Felipe Guzmán pidió ajustar el inventario para poder facturar.',
+    'María Espinoza (13/11): el remito 344490915 son 8 tubos 500x2.50 facturados el 30/10 por solicitud de Raquel; el cliente aún no los retira.',
+    'Acero: José Avendaño reportó diferencias entre lo que dijo el proyecto y lo contado en planta del acero sobrante de SPH y Kermode. El 13/11 llegaron además 135 varillas #4 de 6 m (805 kg) y 38 varillas #9 de 9 m (1 731 kg). Envió el reporte de inventario de acero el 14/11.',
+    'Regla propuesta por Luis Martínez el 10/11: las solicitudes de baja de inventario van hasta el día 5 de cada mes; ABS no acepta solicitudes 3 días antes del cierre y deben llegar con todas las aprobaciones. El ajuste de octubre sí se aplicó el 27/10.',
+    'Comité de inventarios HMS: miércoles 25 a las 11:00 a. m. La invitación a paula.zapata@holcim.com rebotó porque la dirección no existe. Rechazaron Randall Mora, Estefani Quirós y Santiago García; aceptaron Tatiana Flórez, Errol Gómez y Luis Diego Solano; Fernando Hidalgo aceptó tentativamente.',
+    'Reunión del 10/11 (Seguimiento de inventarios HMS): Luis David crea el instructivo de inventarios con Susana y le envía avances a Cristian; Camila Víquez apoya el mapeo.',
+    'Auditoría externa de EY: lunes 7 de diciembre. Luis Martínez aclaró que Luis David es el responsable de apoyo y compartió un cuadro de requerimientos.',
+    'La toma física rutinaria del 14/11 cubrió acero, Central de Mezclado y producto terminado.'
+  ],
+  alejandro:[
+    'Órdenes de cambio en AppSheet (HMS-OC): la OC-03 del proyecto Yara está fuera de plazo y llegan alertas diarias (21, 22 y 23 de noviembre). La OC-04 Yara (20/11) y la OC-02 Alcantarillas Meco (18/11) llegaron como URGENTES y piden confirmar con el botón "Enterado". La OC-01 Barreras Pequeño Mundo Meco ya está finalizada.',
+    'La alerta de la OC-18 (Agromonte) del 10/11 salió con 0.1 horas y sin nombre de etapa ("etapa(s): ."), lo que sugiere un error en la lógica de la alerta.',
+    'Proyecto de tablets: 7 líneas de datos aprobadas. David Ortiz (TI) dice que el proveedor Liberty entrega las SIM entre el miércoles 25 y el jueves 26; después hay que configurar las tablets.',
+    'Guillermo Ordeñana (supervisor de Central de Mezclado) reenvió el 11/11 el formulario "Autorización de chorrea" sin comentario.',
+    'AppSheet también envía por correo los reportes OEE de la Central de Mezclado y las órdenes de mantenimiento (EN PROCESO / CERRADO).'
+  ],
+  fabiola:[
+    'Todavía no sabes qué dashboards usa la planta ni en qué herramienta están.',
+    'Karla Villalta implementó el 12/11 el Procedimiento de Control de Calidad y Despacho de Producto Conforme y propuso como KPI el porcentaje de cargas aprobadas a la primera en el Filtro 3.',
+    'AppSheet envía por correo reportes OEE de la Central de Mezclado; llegaron varios entre el 18 y el 20 de noviembre.',
+    'El equipo tiene 20 pendientes abiertos: Ezequiel 9, Alejandro 5, Lilliana 5, Fabiola 1 y Jeniffer 0.'
+  ]
+};
+function itemLine(it, withAgent){
+  return `- ${it.t} | fecha: ${it.d ? fmtLong(it.d) : 'sin fecha'} | estado al 23/11: ${STATES[it.state].t}${it.n ? ' | nota: ' + it.n : ''}${withAgent ? ' | agente: ' + it.agent.name : ''}`;
+}
+function rulesFor(a){
+  const now = new Date();
+  const today = `${DAYS_L[now.getDay()]} ${now.getDate()} de ${MONTHS_L[now.getMonth()]} de ${now.getFullYear()}`;
+  const team = a.id === 'enrique';
+  const mine = team ? ALL : a.items;
+  return [
+    `Eres ${a.name}, un agente de IA de la "Oficina HMS", el equipo digital de Luis David Rodríguez, Ingeniero de Excelencia Operacional en Holcim Modular Solutions (HMS), empresa de elementos prefabricados de concreto en Costa Rica. Le hablas directamente a Luis David.`,
+    `Tu rol: ${a.role}. ${a.desc}`,
+    `Tu estado: ${a.statusText}. Lo que falta para configurarte del todo: ${a.next}`,
+    'El equipo: Enrique (coordinador), Jeniffer (no conformidades), Lilliana (correos y pendientes), Ezequiel (inventarios), Alejandro (AppSheets y órdenes de cambio) y Fabiola (dashboards e indicadores).',
+    `Fecha de hoy según el navegador: ${today}. Los datos de abajo son una foto del correo de Luis David tomada el lunes 23 de noviembre de 2026. Si hoy es otra fecha, tenlo en cuenta y avisa que algo pudo cambiar.`,
+    mine.length ? `Pendientes ${team ? 'de todo el equipo' : 'a tu cargo'}:\n` + mine.map(i => itemLine(i, team)).join('\n') : 'No tienes pendientes registrados en esa foto.',
+    (EXTRA[a.id] || []).length ? 'Contexto adicional:\n' + EXTRA[a.id].map(x => '- ' + x).join('\n') : '',
+    'Cómo responder: en español de Costa Rica, cálido, directo y breve (unas 120 palabras como máximo, salvo que te pidan un borrador o más detalle). Usa listas cortas con guiones cuando ayuden y **negritas** solo para lo clave; no uses encabezados ni tablas. Usa solo estos datos: si algo no está aquí, dilo con claridad y di qué necesitarías. No inventes fechas, cifras, nombres ni direcciones de correo. No puedes enviar correos ni cambiar sistemas: si te piden un mensaje, entrega un borrador listo para que Luis David lo copie y lo envíe. Si la pregunta es del tema de otro agente, responde lo que puedas y sugiere hablar con ese agente.'
+  ].filter(Boolean).join('\n\n');
+}
+let TAB = 'ficha', CUR = null;
+let SAMPLE = null, SSTATE = 'loading', OFFMSG = 'El chat funciona cuando abres la oficina dentro de Claude.';
+let DICT = null, DICT_OK = false, DLISTEN = false;
+const CH = {};
+const chatOf = id => CH[id] || (CH[id] = {turns:[], busy:false, ctl:null});
+function fmtReply(t){
+  const lines = esc(t).split('\n'); let html = '', list = false;
+  for(const raw of lines){
+    const line = raw.replace(/^#{1,6}\s+/, '').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    const m = line.match(/^\s*(?:[-•*]|\d+[.)])\s+(.*)$/);
+    if(m){ if(!list){ html += '<ul>'; list = true; } html += `<li>${m[1]}</li>`; }
+    else { if(list){ html += '</ul>'; list = false; } if(line.trim()) html += `<p>${line}</p>`; }
+  }
+  if(list) html += '</ul>';
+  return html;
+}
+function fichaHTML(a){
   let list;
   if(a.id === 'enrique'){
     const max = Math.max(...AGENTS.map(x => x.items.length), 1);
@@ -375,24 +535,215 @@ function renderAgent(a){
   }
   const links = [`<a class="btn" href="${DRIVE + a.folder}" target="_blank" rel="noopener">Carpeta</a>`, `<a class="btn" href="${DOC + a.ficha}/edit" target="_blank" rel="noopener">Ficha</a>`];
   if(a.sheet) links.push(`<a class="btn pri" href="${SHEET + a.sheet}/edit" target="_blank" rel="noopener">${esc(a.sheetName)}</a>`);
+  return `<p class="desc">${esc(a.desc)}</p>${list}<section><h3>Siguiente paso</h3><p class="next">${esc(a.next)}</p></section><section><h3>Abrir en Drive</h3><div class="links">${links.join('')}</div></section>`;
+}
+function chatHTML(a){
+  return `<div class="chat">
+    <div class="chathead"><span>Conversación con ${esc(a.name)}</span><button type="button" class="linkbtn" id="newChat" hidden>Nueva conversación</button></div>
+    <div class="msgs" id="msgs" role="log" aria-live="polite" aria-label="Mensajes con ${esc(a.name)}"></div>
+    <div class="sugs" id="sugs"></div>
+    <form class="composer" id="composer" autocomplete="off">
+      <textarea id="cin" rows="1" placeholder="Escríbele a ${esc(a.name)}…" aria-label="Mensaje para ${esc(a.name)}"></textarea>
+      <button type="button" class="ib" id="mic" hidden aria-label="Dictar por voz" aria-pressed="false" title="Dictar por voz">${ICON.mic}</button>
+      <button type="submit" class="ib send" id="sendBtn" aria-label="Enviar" title="Enviar">${ICON.send}</button>
+    </form>
+    <p class="cpart" id="cpart" hidden></p>
+    <p class="cnote" id="cnote"></p>
+  </div>`;
+}
+function renderAgent(a){
+  const st = STATUS[a.status];
+  CUR = TAB === 'chat' ? a.id : null;
+  panel.classList.toggle('chatmode', TAB === 'chat');
   panel.innerHTML = `
     <button class="back" type="button" id="backBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Te toca hoy</button>
     <div class="who">${avatar(a, 60)}<div><h2>${esc(a.name)}</h2><p class="sub">${esc(a.role)}</p></div></div>
     <div class="meta"><span class="chip"><i class="dot" style="background:${st.c}"></i>${esc(a.statusText)}</span><span class="chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/></svg>${esc(a.where)}</span></div>
-    <p class="desc">${esc(a.desc)}</p>
-    ${list}
-    <section><h3>Siguiente paso</h3><p class="next">${esc(a.next)}</p></section>
-    <section><h3>Abrir en Drive</h3><div class="links">${links.join('')}</div></section>`;
+    <div class="tabs" role="tablist" aria-label="Vista de ${esc(a.name)}">
+      <button type="button" role="tab" data-tab="chat" aria-selected="${TAB === 'chat'}">Chat</button>
+      <button type="button" role="tab" data-tab="ficha" aria-selected="${TAB === 'ficha'}">Ficha</button>
+    </div>
+    ${TAB === 'chat' ? chatHTML(a) : fichaHTML(a)}`;
   $('#backBtn').addEventListener('click', showSummary);
+  panel.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => {
+    if(TAB === b.dataset.tab) return;
+    TAB = b.dataset.tab; renderAgent(a);
+    if(TAB === 'chat' && window.innerWidth > 780){ const t = $('#cin'); if(t && !t.disabled) t.focus({preventScroll:true}); }
+  }));
+  if(TAB === 'chat'){ wireChat(a); renderMsgs(a); }
 }
+function userBubble(t){
+  const m = document.createElement('div'); m.className = 'msg me';
+  const b = document.createElement('div'); b.className = 'b'; b.textContent = t.content;
+  m.appendChild(b); return m;
+}
+function aiBubble(a, text, t){
+  const m = document.createElement('div'); m.className = 'msg ai';
+  m.innerHTML = avatar(a, 26);
+  const col = document.createElement('div'); col.className = 'bc';
+  const b = document.createElement('div'); b.className = 'b';
+  if(t && t.failed && !t.content){ b.classList.add('err'); b.textContent = t.note || 'No llegó respuesta.'; col.appendChild(b); m.appendChild(col); return m; }
+  if(t && t.pending && !t.content) b.innerHTML = '<span class="typing" role="img" aria-label="Pensando"><span></span><span></span><span></span></span>';
+  else b.innerHTML = fmtReply(text || '');
+  if(t) t.el = b;
+  col.appendChild(b);
+  if(t && t.note){ const n = document.createElement('span'); n.className = 'mnote'; n.textContent = t.note; col.appendChild(n); }
+  if(t && !t.pending && t.content){
+    const act = document.createElement('div'); act.className = 'mact';
+    const cp = document.createElement('button'); cp.type = 'button'; cp.textContent = 'Copiar';
+    cp.addEventListener('click', () => copyText(t.content, cp, b));
+    act.appendChild(cp); col.appendChild(act);
+  }
+  m.appendChild(col); return m;
+}
+function renderMsgs(a){
+  const box = $('#msgs'); if(!box || CUR !== a.id) return;
+  const c = chatOf(a.id);
+  box.textContent = '';
+  box.appendChild(aiBubble(a, GREET[a.id], null));
+  c.turns.forEach(t => box.appendChild(t.role === 'user' ? userBubble(t) : aiBubble(a, t.content, t)));
+  const sg = $('#sugs');
+  if(sg){
+    sg.hidden = c.turns.length > 0;
+    sg.textContent = '';
+    if(!c.turns.length) (SUGS[a.id] || []).forEach(q => { const b = document.createElement('button'); b.type = 'button'; b.textContent = q; b.addEventListener('click', () => send(a, q)); sg.appendChild(b); });
+  }
+  box.scrollTop = box.scrollHeight;
+  refreshComposer(a);
+}
+function paintReply(r){
+  const el = r.el; if(!el || !el.isConnected) return;
+  const box = $('#msgs'), near = box ? box.scrollHeight - box.scrollTop - box.clientHeight < 80 : false;
+  el.innerHTML = fmtReply(r.content);
+  if(box && near) box.scrollTop = box.scrollHeight;
+}
+function refreshComposer(a){
+  const c = chatOf(a.id), cin = $('#cin'), sb = $('#sendBtn'), note = $('#cnote'), mic = $('#mic');
+  if(!cin || CUR !== a.id) return;
+  const off = SSTATE !== 'ready';
+  cin.disabled = off;
+  cin.placeholder = DLISTEN ? 'Escuchando…' : `Escríbele a ${a.name}…`;
+  sb.disabled = off;
+  sb.classList.toggle('stop', c.busy);
+  sb.innerHTML = c.busy ? ICON.stop : ICON.send;
+  sb.setAttribute('aria-label', c.busy ? 'Detener la respuesta' : 'Enviar'); sb.title = c.busy ? 'Detener' : 'Enviar';
+  mic.hidden = off || !DICT || !DICT_OK;
+  mic.classList.toggle('rec', DLISTEN); mic.setAttribute('aria-pressed', String(DLISTEN));
+  mic.title = DLISTEN ? 'Detener el dictado' : 'Dictar por voz';
+  if(!note.dataset.flash) note.textContent = SSTATE === 'loading' ? 'Conectando con Claude…' : off ? OFFMSG : c.busy ? `${a.name} está escribiendo…` : 'Responde con los datos del 23 de noviembre. No envía correos: te da borradores.';
+  const sg = $('#sugs'); if(sg) sg.querySelectorAll('button').forEach(b => { b.disabled = off || c.busy; });
+  const nb = $('#newChat'); if(nb) nb.hidden = !(c.turns.length && !c.busy);
+}
+function flashNote(msg){
+  const n = $('#cnote'); if(!n) return;
+  n.dataset.flash = '1'; n.textContent = msg;
+  setTimeout(() => { delete n.dataset.flash; afterCap(); }, 3500);
+}
+function autosize(t){ t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 120) + 'px'; }
+function wireChat(a){
+  const form = $('#composer'), cin = $('#cin'), mic = $('#mic'), nb = $('#newChat');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const c = chatOf(a.id);
+    if(c.busy){ if(e.submitter && e.submitter.id === 'sendBtn' && c.ctl) c.ctl.abort(); return; }
+    const v = cin.value; if(!v.trim()) return;
+    cin.value = ''; autosize(cin); send(a, v);
+  });
+  cin.addEventListener('keydown', e => { if(e.key === 'Enter' && !e.shiftKey && !e.isComposing){ e.preventDefault(); form.requestSubmit(); } });
+  cin.addEventListener('input', () => autosize(cin));
+  mic.addEventListener('click', () => {
+    if(!DICT) return;
+    if(DLISTEN){ DICT.stop().catch(() => {}); return; }
+    DICT.start().catch(e => {
+      const code = e && e.code;
+      if(code === 'not_granted' || code === 'unavailable') DICT_OK = false;
+      else if(code === 'rate_limited' || code === 'upstream_error') flashNote('No se pudo usar el micrófono. Intenta de nuevo.');
+      afterCap();
+    });
+  });
+  nb.addEventListener('click', () => { const c = chatOf(a.id); if(c.busy) return; c.turns = []; renderMsgs(a); });
+}
+function errCopy(e){
+  const code = e && e.code;
+  if(code === 'rate_limited') return e.reason === 'usage_limit' ? 'Llegaste al límite de uso de Claude por ahora. Intenta más tarde.' : 'Muchas preguntas seguidas. Espera un momento y vuelve a intentar.';
+  if(code === 'session_expired') return 'Tu sesión de Claude expiró. Vuelve a iniciar sesión.';
+  if(code === 'prompt_too_large') return 'La conversación quedó muy larga. Empieza una nueva.';
+  if(code === 'empty_completion') return 'No llegó respuesta. Pregúntale de otra forma.';
+  if(code === 'not_granted') return 'No se dio permiso para usar Claude en esta página.';
+  if(code === 'sampling_disabled' || code === 'not_declared' || code === 'capability_disabled' || code === 'capability_removed') return 'El chat no está disponible en esta vista.';
+  return 'Se cortó la conexión. Intenta de nuevo.';
+}
+async function send(a, raw){
+  const c = chatOf(a.id), text = String(raw || '').trim();
+  if(!text || c.busy || !SAMPLE || SSTATE !== 'ready') return;
+  c.turns.push({role:'user', content:text});
+  const reply = {role:'assistant', content:'', pending:true};
+  c.turns.push(reply);
+  c.busy = true;
+  const ctl = c.ctl = new AbortController();
+  if(W) W.talk(a.id, true);
+  renderMsgs(a);
+  const hist = c.turns.filter(t => t !== reply && !t.failed && t.content).slice(-16).map(t => ({role:t.role, content:t.content}));
+  const input = [{role:'user', content:rulesFor(a)}, ...hist];
+  try {
+    const res = await SAMPLE(input, {modelTier:'quick', cache:false, signal:ctl.signal, onText:({text:t}) => { reply.content = t; paintReply(reply); }});
+    reply.content = res.text;
+    if(res.truncated) reply.note = 'La respuesta quedó cortada. Pide algo más corto.';
+  } catch(e){
+    const code = e && e.code;
+    if(code === 'refused'){ reply.content = ''; reply.note = `${a.name} no puede responder eso. Prueba con otra pregunta.`; }
+    else if(code === 'cancelled'){ reply.content = (e && e.text) || reply.content; reply.note = 'Detenido.'; }
+    else {
+      reply.content = (e && e.text) || reply.content;
+      reply.note = errCopy(e);
+      if(['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(code)){
+        SSTATE = 'off';
+        OFFMSG = code === 'not_granted' ? 'No se dio permiso para que esta página use Claude. Puedes cambiarlo en el menú de permisos del artefacto.' : 'El chat no está disponible para esta cuenta en esta vista.';
+      }
+    }
+    if(!reply.content) reply.failed = true;
+  } finally {
+    reply.pending = false; c.busy = false; c.ctl = null;
+    if(W) W.talk(a.id, false);
+    if(CUR === a.id) renderMsgs(a);
+  }
+}
+function copyText(text, btn, el){
+  const done = () => { btn.textContent = 'Copiado'; setTimeout(() => { btn.textContent = 'Copiar'; }, 1500); };
+  const fallback = () => { const r = document.createRange(); r.selectNodeContents(el); const s = window.getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Texto seleccionado'; setTimeout(() => { btn.textContent = 'Copiar'; }, 2000); };
+  try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+}
+function afterCap(){ if(CUR){ const a = byId(CUR); if(a) refreshComposer(a); } }
 function syncLists(){ document.querySelectorAll('.mate').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === selected))); }
 function select(id, from){
   const a = byId(id); if(!a) return;
   selected = id; renderAgent(a); syncLists(); panel.scrollTop = 0;
   if(W) W.focus(id, true);
   if(window.innerWidth <= 780 && from !== 'list') panel.scrollIntoView({behavior: RM ? 'auto' : 'smooth', block:'start'});
+  else if(TAB === 'chat' && window.innerWidth > 780){ const t = $('#cin'); if(t && !t.disabled) t.focus({preventScroll:true}); }
 }
-function showSummary(){ selected = null; renderSummary(); syncLists(); panel.scrollTop = 0; if(W) W.focus(null); }
+function showSummary(){ selected = null; CUR = null; panel.classList.remove('chatmode'); renderSummary(); syncLists(); panel.scrollTop = 0; if(W) W.focus(null); }
+(function initCaps(){
+  const CL = window.claude;
+  if(!CL || typeof CL.use !== 'function'){ SSTATE = 'off'; return; }
+  CL.use('sample').then(s => { SAMPLE = s || null; SSTATE = s ? 'ready' : 'off'; afterCap(); }, () => { SSTATE = 'off'; afterCap(); });
+  CL.use('dictation').then(d => {
+    if(!d) return;
+    DICT = d; DICT_OK = true;
+    d.onFinal(({text}) => { const t = $('#cin'); if(!t) return; t.value = t.value ? t.value + text : String(text).replace(/^\s+/, ''); autosize(t); });
+    d.onPartial(({text}) => { const p = $('#cpart'); if(!p) return; p.hidden = !text; p.textContent = text; });
+    d.onState(({state, reason}) => {
+      DLISTEN = state !== 'idle';
+      if(state === 'idle'){
+        const p = $('#cpart'); if(p){ p.hidden = true; p.textContent = ''; }
+        if(reason === 'not_granted' || reason === 'unavailable') DICT_OK = false;
+        else if(reason === 'rate_limited' || reason === 'upstream_error') flashNote('No se pudo usar el micrófono. Intenta de nuevo.');
+      }
+      afterCap();
+    });
+    afterCap();
+  }, () => {});
+})();
 renderChrome(); renderSummary();
 
 /* ---------------- Mundo 3D ---------------- */
@@ -1321,6 +1672,7 @@ function buildWorld(){
       f.armL.rotation.x = -1.1; f.armL.rotation.z = -.15; f.armR.rotation.x = -1.0 + Math.sin(t*2.2 + ph)*.08; f.armR.rotation.z = .2;
       const look = Math.max(0, Math.sin(t*.35 + ph)); f.head.rotation.y = -look*.75; f.head.rotation.x = .28*(1 - look);
     }
+    f.head.rotation.z = f.talking ? Math.sin(t*11)*.08 : 0;
   }
   function stepYou(dt, t){
     const f = you;
@@ -1373,7 +1725,8 @@ function buildWorld(){
     renderer.render(scene, camera); updateLabels();
     if(first){ first = false; $('#loading').hidden = true; }
   });
-  return {focus, home};
+  function talk(id, on){ const f = figs[id]; if(f) f.talking = !!on; if(tagEls[id]) tagEls[id].classList.toggle('talk', !!on); }
+  return {focus, home, talk};
 }
 })();
 </script>
