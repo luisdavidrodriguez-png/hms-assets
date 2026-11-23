@@ -78,7 +78,7 @@ a{color:var(--accent)}
 .room{position:absolute;left:0;top:0;font:700 10px var(--f-body);letter-spacing:.07em;text-transform:uppercase;color:#3d4552;
   background:rgba(255,255,255,.78);padding:3px 8px;border-radius:6px;white-space:nowrap;will-change:transform}
 .float{position:absolute;z-index:2}
-.hello{top:12px;left:12px;padding:12px 14px;max-width:min(330px,calc(100% - 80px))}
+.hello{top:12px;left:12px;padding:12px 14px;max-width:min(372px,calc(100% - 80px))}
 .hello h1{margin:0;font-family:var(--f-display);font-size:19px;line-height:1.2;letter-spacing:-.01em}
 .hello p{margin:3px 0 8px;color:var(--muted);font-size:12.5px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -135,6 +135,21 @@ button.row:hover{border-color:var(--line);background:var(--surface)}
 .tb em{font-style:normal;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
 .fail{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:#2f3a48;z-index:4}
 .fail div{background:#fff;border-radius:14px;padding:16px 18px;max-width:380px}
+.live{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:9px}
+.lv{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--muted);line-height:1.3}
+.lv i{width:8px;height:8px;border-radius:50%;background:var(--idle);display:block;flex:none}
+.lv.on i{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 25%,transparent)}
+.lv.wait i{background:var(--warn)}
+.lv.err{color:var(--late)} .lv.err i{background:var(--late)}
+.lvbtn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:999px;padding:4px 10px;font:600 11.5px var(--f-body);cursor:pointer}
+.lvbtn.ghost{background:none;color:var(--accent)}
+.lvicon{width:26px;height:26px;border-radius:8px;border:0;background:var(--surface-2);display:grid;place-items:center;cursor:pointer;color:var(--fg)}
+.lvicon:hover{color:var(--accent)}
+.lvicon.spin svg{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.src{font-size:10px;letter-spacing:.02em;text-transform:none;font-weight:600;color:var(--muted);background:var(--surface-2);padding:1px 7px;border-radius:6px}
+.empty{margin:0;color:var(--muted);font-size:13px}
+.row .det{margin-top:4px;line-height:1.35}
 .askcard{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--accent-soft);cursor:pointer;text-align:left;color:var(--fg)}
 .askcard:hover{border-color:var(--accent)}
 .askcard .tx{flex:1;min-width:0}
@@ -207,7 +222,7 @@ button.row:hover{border-color:var(--line);background:var(--surface)}
   .panel.chatmode{overflow:visible}
   .msgs{max-height:55vh}
 }
-@media (prefers-reduced-motion:reduce){.tag{transition:none}.typing span,.ib.rec,.tag.talk::after{animation:none}}
+@media (prefers-reduced-motion:reduce){.tag{transition:none}.typing span,.ib.rec,.tag.talk::after,.lvicon.spin svg{animation:none}}
 </style>
 
 <div class="app">
@@ -223,7 +238,7 @@ button.row:hover{border-color:var(--line);background:var(--surface)}
     </nav>
     <div class="sec">Agentes</div>
     <div class="team" id="team"></div>
-    <p class="foot">Datos tomados de tu correo el lunes 23 de noviembre de 2026.</p>
+    <p class="foot" id="sideFoot"></p>
   </aside>
 
   <div class="main">
@@ -264,9 +279,9 @@ const MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov
 const pd = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
 const fmt = s => { const d = pd(s); return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`; };
 const STATES = { late:{t:'Vencido'}, today:{t:'Vence hoy'}, week:{t:'Esta semana'}, later:{t:'En tiempo'}, none:{t:'Sin fecha'} };
-function stateOf(it){
+function stateOf(it, ref = SNAP){
   if(!it.d) return 'none';
-  const diff = Math.round((pd(it.d) - SNAP) / 864e5);
+  const diff = Math.round((pd(it.d) - ref) / 864e5);
   if(diff < 0) return 'late';
   if(diff === 0) return 'today';
   if(diff <= 7) return 'week';
@@ -339,10 +354,17 @@ const AGENTS = [
     ]}
 ];
 const YOU_LOOK = {torso:'#e6eef8', print:'shirt', legs:'#34507c', hair:'short', hairColor:'#2b1d16'};
-AGENTS.forEach(a => a.items.forEach(it => { it.state = stateOf(it); it.agent = a; }));
-const ALL = AGENTS.flatMap(a => a.items);
-const N = s => ALL.filter(i => i.state === s).length;
-const COUNTS = {total:ALL.length, late:N('late'), today:N('today'), week:N('week'), later:N('later'), none:N('none')};
+const SNAP_ITEMS = {};
+AGENTS.forEach(a => { SNAP_ITEMS[a.id] = a.items.map(x => ({...x})); });
+let DATA = {mode:'snapshot', ref:SNAP};
+let ALL = [], COUNTS = {};
+function recompute(){
+  AGENTS.forEach(a => a.items.forEach(it => { it.state = stateOf(it, DATA.ref); it.agent = a; }));
+  ALL = AGENTS.flatMap(a => a.items);
+  const N = s => ALL.filter(i => i.state === s).length;
+  COUNTS = {total:ALL.length, late:N('late'), today:N('today'), week:N('week'), later:N('later'), none:N('none')};
+}
+recompute();
 const byId = id => AGENTS.find(a => a.id === id);
 
 /* ---------------- Avatares SVG ---------------- */
@@ -373,43 +395,48 @@ function avatar(a, size){
 let selected = null, W = null;
 const panel = $('#panel');
 function greeting(){ const h = new Date().getHours(); return h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches'; }
+function refLabel(cap){ const d = DATA.ref, s = `${DAYS_L[d.getDay()]} ${d.getDate()} de ${MONTHS_L[d.getMonth()]}`; return cap ? s[0].toUpperCase() + s.slice(1) : s; }
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 function renderChrome(){
-  $('#hello').innerHTML = `<h1>${greeting()}, Luis David</h1><p>Lunes 23 de noviembre · ${COUNTS.total} pendientes abiertos en el equipo</p>
-    <div class="chips"><span class="chip"><i class="dot" style="background:var(--late)"></i>${COUNTS.late} vencido</span><span class="chip"><i class="dot" style="background:var(--today)"></i>${COUNTS.today} vencen hoy</span><span class="chip"><i class="dot" style="background:var(--week)"></i>${COUNTS.week} esta semana</span></div>`;
+  $('#hello').innerHTML = `<h1>${greeting()}, Luis David</h1><p>${DATA.mode === 'live' ? 'Hoy, ' + refLabel(false) : refLabel(true)} · ${plural(COUNTS.total, 'pendiente abierto', 'pendientes abiertos')} en el equipo</p>
+    <div class="chips"><span class="chip"><i class="dot" style="background:var(--late)"></i>${plural(COUNTS.late, 'vencido', 'vencidos')}</span><span class="chip"><i class="dot" style="background:var(--today)"></i>${COUNTS.today} ${COUNTS.today === 1 ? 'vence' : 'vencen'} hoy</span><span class="chip"><i class="dot" style="background:var(--week)"></i>${COUNTS.week} esta semana</span></div>
+    <div class="live" id="live"></div>`;
+  renderLive();
+  $('#sideFoot').textContent = DATA.mode === 'live' ? 'Pendientes leídos en vivo de tu hoja "Lista maestra de pendientes". El resto del contexto viene de tu correo del 23 de noviembre.' : 'Datos tomados de tu correo el lunes 23 de noviembre de 2026.';
   const ready = AGENTS.filter(a => a.status !== 'idle').length;
   $('#stats').innerHTML = `<div class="card stat"><b>${COUNTS.total}</b><span>pendientes<br>abiertos</span></div><div class="card stat"><b>${COUNTS.late + COUNTS.today}</b><span>vencidos o<br>para hoy</span></div><div class="card stat"><b>${ready} de ${AGENTS.length}</b><span>agentes<br>listos</span></div>`;
   const mate = a => `<button class="mate" type="button" data-id="${a.id}" aria-pressed="false">${avatar(a, 34)}<span class="tx"><span class="nm">${esc(a.name)}<i class="dot" style="background:${STATUS[a.status].c}" title="${esc(STATUS[a.status].t)}"></i></span><span class="rl">${esc(a.role)}</span></span>${a.items.length ? `<span class="cnt">${a.items.length}</span>` : ''}</button>`;
   $('#team').innerHTML = AGENTS.map(mate).join('');
   $('#strip').innerHTML = AGENTS.map(mate).join('');
   document.querySelectorAll('.mate').forEach(b => b.addEventListener('click', () => select(b.dataset.id, 'list')));
-  $('#navWorld').addEventListener('click', () => { showSummary(); if(W) W.home(); });
+  syncLists();
 }
 function itemRow(it, withAgent){
   const st = STATES[it.state];
   const when = it.d ? fmt(it.d) : 'Sin fecha';
   const sub = [withAgent ? it.agent.name : null, when, it.n].filter(Boolean).map(esc).join(' · ');
   const tag = withAgent ? 'button' : 'div';
-  return `<li><${tag} class="row" ${withAgent ? `type="button" data-agent="${it.agent.id}"` : ''}>${withAgent ? avatar(it.agent, 26) : `<span class="st ${it.state}">${st.t}</span>`}<span class="tx"><p>${esc(it.t)}</p><small>${sub}</small></span>${withAgent ? `<span class="st ${it.state}">${st.t}</span>` : ''}</${tag}></li>`;
+  return `<li><${tag} class="row" ${withAgent ? `type="button" data-agent="${it.agent.id}"` : ''}>${withAgent ? avatar(it.agent, 26) : `<span class="st ${it.state}">${st.t}</span>`}<span class="tx"><p>${esc(it.t)}</p><small>${sub}</small>${!withAgent && it.detail ? `<small class="det">${esc(it.detail)}</small>` : ''}</span>${withAgent ? `<span class="st ${it.state}">${st.t}</span>` : ''}</${tag}></li>`;
 }
 function renderSummary(){
-  const urgent = ALL.filter(i => i.state === 'late' || i.state === 'today');
-  const week = ALL.filter(i => i.state === 'week').sort((a,b) => a.d.localeCompare(b.d));
+  const byDate = (a, b) => a.d.localeCompare(b.d);
+  const urgent = ALL.filter(i => i.state === 'late' || i.state === 'today').sort(byDate);
+  const week = ALL.filter(i => i.state === 'week').sort(byDate);
+  const later = ALL.filter(i => i.state === 'later').sort(byDate).slice(0, 4);
+  const list = (arr, empty) => arr.length ? `<ul class="items">${arr.map(i => itemRow(i, true)).join('')}</ul>` : `<p class="empty">${empty}</p>`;
   panel.innerHTML = `
     <h2>Te toca hoy</h2>
-    <p class="sub">Estado del equipo al lunes 23 de noviembre</p>
+    <p class="sub">${DATA.mode === 'live' ? 'Estado del equipo hoy, ' + refLabel(false) : 'Estado del equipo al lunes 23 de noviembre'}</p>
     <div class="kpis">
-      <div class="kpi late"><b>${COUNTS.late}</b><span>Vencido</span></div>
-      <div class="kpi today"><b>${COUNTS.today}</b><span>Vencen hoy</span></div>
+      <div class="kpi late"><b>${COUNTS.late}</b><span>${COUNTS.late === 1 ? 'Vencido' : 'Vencidos'}</span></div>
+      <div class="kpi today"><b>${COUNTS.today}</b><span>${COUNTS.today === 1 ? 'Vence hoy' : 'Vencen hoy'}</span></div>
       <div class="kpi week"><b>${COUNTS.week}</b><span>Esta semana</span></div>
       <div class="kpi"><b>${COUNTS.later + COUNTS.none}</b><span>Más adelante o sin fecha</span></div>
     </div>
     <button class="askcard" type="button" id="askEnrique">${avatar(byId('enrique'), 42)}<span class="tx"><b>Pregúntale a Enrique</b><small>Tu coordinador conoce los ${COUNTS.total} pendientes del equipo.</small></span>${ICON.chev}</button>
-    <section><h3>Urgente</h3><ul class="items">${urgent.map(i => itemRow(i, true)).join('')}</ul></section>
-    <section><h3>Esta semana</h3><ul class="items">${week.map(i => itemRow(i, true)).join('')}</ul></section>
-    <section><h3>Fechas clave</h3><ul class="items">
-      <li><div class="row"><span class="st later">vie 5 dic</span><span class="tx"><p>Límite para enviar los ajustes de inventario de noviembre</p><small>Ezequiel</small></span></div></li>
-      <li><div class="row"><span class="st later">lun 7 dic</span><span class="tx"><p>Auditoría externa EY</p><small>Ezequiel · eres el responsable de apoyo</small></span></div></li>
-    </ul></section>
+    <section><h3>Urgente</h3>${list(urgent, 'Nada vencido ni para hoy.')}</section>
+    <section><h3>Esta semana</h3>${list(week, 'Nada más vence esta semana.')}</section>
+    ${later.length ? `<section><h3>Fechas clave</h3>${list(later, '')}</section>` : ''}
     <section><div class="links"><a class="btn pri" href="${SHEET}1XfGCRN1upZsfr0ZAN2Lp-w_dHbUpBMMfcPjOKhY7ysU/edit" target="_blank" rel="noopener">Abrir la lista completa</a></div></section>`;
   panel.querySelectorAll('[data-agent]').forEach(b => b.addEventListener('click', () => select(b.dataset.agent, 'panel')));
   $('#askEnrique').addEventListener('click', () => { TAB = 'chat'; select('enrique', 'panel'); });
@@ -443,7 +470,6 @@ const fmtLong = s => { const d = pd(s); return `${DAYS_L[d.getDay()]} ${d.getDat
 const EXTRA = {
   enrique:[
     'Estado del equipo: Lilliana está activa bajo demanda (revisa el correo cuando Luis David se lo pide). Ezequiel tiene su ficha y su hoja de control listas. Jeniffer, Alejandro y Fabiola están por configurar. Tú, Enrique, te configuras cuando haya al menos dos agentes trabajando.',
-    'Pendientes por estado al 23/11: 1 vencido, 2 vencen hoy, 8 esta semana, 4 más adelante y 5 sin fecha (20 en total). Ezequiel tiene 9, Alejandro 5, Lilliana 5, Fabiola 1 y Jeniffer 0.',
     'Fechas clave: viernes 5 de diciembre, límite para enviar los ajustes de inventario de noviembre (las solicitudes de baja van hasta el día 5 de cada mes); lunes 7 de diciembre, auditoría externa de EY, donde Luis David es el responsable de apoyo.',
     'Reuniones: lunes 23 a la 1:00 p. m., levantamiento de requerimientos de identificación con código; martes 24 a las 3:00 p. m., cotización de etiquetas; miércoles 25 a las 11:00 a. m., Comité de inventarios HMS.'
   ],
@@ -461,7 +487,6 @@ const EXTRA = {
     'La lista completa está en la hoja "Lista maestra de pendientes - Lilliana" en Drive.'
   ],
   ezequiel:[
-    'Diferencias de la toma física del 14/11 (material, descripción, sistema/físico, ajuste): 10085218 TUBO 1000MM X 2.50 C-76 C-III B 62/61 (-1); 10085219 TUBO 300MM X 1.25 C-76 C-III B 118/109 (-9); 10086607 TUBO 400MM X 2.50 C-76 C-III B 131/130 (-1); 10085231 TUBO 500MM X 1.25 C-76 C-III B 26/20 (-6); 10085247 TUBO 500MM X 2.50 C-14 C-1 41/56 (+15); 10085232 TUBO 500MM X 2.50 C-76 C-III B 158/148 (-10); 10085234 TUBO 600MM X 2.50 C-76 C-III B 88/87 (-1); 10085236 TUBO 800MM X 1.25 C-76 C-III B 64/66 (+2); 10085237 TUBO 800MM X 2.50 C-76 C-III B 208/209 (+1); 10085239 TUBO 900MM X 2.50 C-76 C-III B 202/201 (-1); 10085241 TUBO MC 1200MM X 2.50 C-76 C-III B 58/57 (-1); 10085244 TUBO MC 1800MM X 2.50 C-76 C-III B 53/50 (-3).',
     'Luis David le envió esas diferencias a Kattia Hidalgo el 16/11 (con copia a Daniela Jiménez, Erika Barbosa y José Alfredo Rojas) para validar si corresponden a refactura o a ajuste. Kattia no ha respondido ese correo.',
     'El 18/11 Kattia reenvió el caso del pedido Meco 4500174247: el tubo 10085234 (600x2.50) tenía 6 en sistema y 26 físicos, sin notas de crédito pendientes; Felipe Guzmán pidió ajustar el inventario para poder facturar.',
     'María Espinoza (13/11): el remito 344490915 son 8 tubos 500x2.50 facturados el 30/10 por solicitud de Raquel; el cliente aún no los retira.',
@@ -482,25 +507,44 @@ const EXTRA = {
   fabiola:[
     'Todavía no sabes qué dashboards usa la planta ni en qué herramienta están.',
     'Karla Villalta implementó el 12/11 el Procedimiento de Control de Calidad y Despacho de Producto Conforme y propuso como KPI el porcentaje de cargas aprobadas a la primera en el Filtro 3.',
-    'AppSheet envía por correo reportes OEE de la Central de Mezclado; llegaron varios entre el 18 y el 20 de noviembre.',
-    'El equipo tiene 20 pendientes abiertos: Ezequiel 9, Alejandro 5, Lilliana 5, Fabiola 1 y Jeniffer 0.'
+    'AppSheet envía por correo reportes OEE de la Central de Mezclado; llegaron varios entre el 18 y el 20 de noviembre.'
   ]
 };
 function itemLine(it, withAgent){
-  return `- ${it.t} | fecha: ${it.d ? fmtLong(it.d) : 'sin fecha'} | estado al 23/11: ${STATES[it.state].t}${it.n ? ' | nota: ' + it.n : ''}${withAgent ? ' | agente: ' + it.agent.name : ''}`;
+  const parts = [it.t, `fecha límite: ${it.d ? fmtLong(it.d) : 'sin fecha'}`, `estado: ${STATES[it.state].t}`];
+  if(it.prio) parts.push('prioridad: ' + it.prio);
+  if(it.sit) parts.push('situación: ' + it.sit);
+  if(it.n && it.n !== it.sit) parts.push('nota: ' + it.n);
+  if(it.detail) parts.push('detalle: ' + it.detail);
+  if(it.who) parts.push('involucrados: ' + it.who);
+  if(withAgent) parts.push('agente: ' + it.agent.name);
+  return '- ' + parts.join(' | ');
+}
+const fmtSigned = n => (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n).toLocaleString('es-CR');
+function diffLine(){
+  const rows = DIFFS.filter(r => norm(r.estado) !== 'cerrado');
+  const net = rows.reduce((t, r) => t + r.dif, 0);
+  return `Diferencias de inventario de tubos (${DIFFS_LIVE ? 'en vivo, de la hoja "Control de diferencias de inventario"' : 'toma física del 14/11, según el correo'}; neto ${fmtSigned(net)}): ` + rows.map(r => `${r.mat} ${r.desc}: sistema ${r.sys}, físico ${r.fis} (${fmtSigned(r.dif)})${r.estado ? ', ' + r.estado : ''}${r.causa ? ', causa: ' + r.causa : ''}${r.notas ? ', nota: ' + r.notas : ''}`).join('; ') + '.';
 }
 function rulesFor(a){
   const now = new Date();
   const today = `${DAYS_L[now.getDay()]} ${now.getDate()} de ${MONTHS_L[now.getMonth()]} de ${now.getFullYear()}`;
   const team = a.id === 'enrique';
   const mine = team ? ALL : a.items;
+  const live = DATA.mode === 'live';
+  const when = live
+    ? `Fecha de hoy: ${today}. Los pendientes de abajo vienen en vivo de la hoja "Lista maestra de pendientes" de Luis David (leída ${LIVE.at ? 'a las ' + hhmm(LIVE.at) : 'hoy'}) y su estado está calculado con la fecha de hoy. El contexto adicional viene de su correo del 23 de noviembre de 2026 y pudo haber cambiado.`
+    : `Fecha de hoy según el navegador: ${today}. Los datos de abajo son una foto del correo de Luis David tomada el lunes 23 de noviembre de 2026. Si hoy es otra fecha, tenlo en cuenta y avisa que algo pudo cambiar.`;
+  const summary = (team || a.id === 'fabiola') ? `Resumen actual del equipo: ${COUNTS.total} pendientes abiertos (${COUNTS.late} vencidos, ${COUNTS.today} vencen hoy, ${COUNTS.week} esta semana, ${COUNTS.later} más adelante y ${COUNTS.none} sin fecha). Por agente: ${AGENTS.filter(x => x.id !== 'enrique').map(x => x.name + ' ' + x.items.length).join(', ')}.` : '';
   return [
     `Eres ${a.name}, un agente de IA de la "Oficina HMS", el equipo digital de Luis David Rodríguez, Ingeniero de Excelencia Operacional en Holcim Modular Solutions (HMS), empresa de elementos prefabricados de concreto en Costa Rica. Le hablas directamente a Luis David.`,
     `Tu rol: ${a.role}. ${a.desc}`,
     `Tu estado: ${a.statusText}. Lo que falta para configurarte del todo: ${a.next}`,
     'El equipo: Enrique (coordinador), Jeniffer (no conformidades), Lilliana (correos y pendientes), Ezequiel (inventarios), Alejandro (AppSheets y órdenes de cambio) y Fabiola (dashboards e indicadores).',
-    `Fecha de hoy según el navegador: ${today}. Los datos de abajo son una foto del correo de Luis David tomada el lunes 23 de noviembre de 2026. Si hoy es otra fecha, tenlo en cuenta y avisa que algo pudo cambiar.`,
-    mine.length ? `Pendientes ${team ? 'de todo el equipo' : 'a tu cargo'}:\n` + mine.map(i => itemLine(i, team)).join('\n') : 'No tienes pendientes registrados en esa foto.',
+    when,
+    summary,
+    mine.length ? `Pendientes ${team ? 'de todo el equipo' : 'a tu cargo'}:\n` + mine.map(i => itemLine(i, team)).join('\n') : 'No tienes pendientes registrados.',
+    a.id === 'ezequiel' ? diffLine() : '',
     (EXTRA[a.id] || []).length ? 'Contexto adicional:\n' + EXTRA[a.id].map(x => '- ' + x).join('\n') : '',
     'Cómo responder: en español de Costa Rica, cálido, directo y breve (unas 120 palabras como máximo, salvo que te pidan un borrador o más detalle). Usa listas cortas con guiones cuando ayuden y **negritas** solo para lo clave; no uses encabezados ni tablas. Usa solo estos datos: si algo no está aquí, dilo con claridad y di qué necesitarías. No inventes fechas, cifras, nombres ni direcciones de correo. No puedes enviar correos ni cambiar sistemas: si te piden un mensaje, entrega un borrador listo para que Luis David lo copie y lo envíe. Si la pregunta es del tema de otro agente, responde lo que puedas y sugiere hablar con ese agente.'
   ].filter(Boolean).join('\n\n');
@@ -535,7 +579,7 @@ function fichaHTML(a){
   }
   const links = [`<a class="btn" href="${DRIVE + a.folder}" target="_blank" rel="noopener">Carpeta</a>`, `<a class="btn" href="${DOC + a.ficha}/edit" target="_blank" rel="noopener">Ficha</a>`];
   if(a.sheet) links.push(`<a class="btn pri" href="${SHEET + a.sheet}/edit" target="_blank" rel="noopener">${esc(a.sheetName)}</a>`);
-  return `<p class="desc">${esc(a.desc)}</p>${list}<section><h3>Siguiente paso</h3><p class="next">${esc(a.next)}</p></section><section><h3>Abrir en Drive</h3><div class="links">${links.join('')}</div></section>`;
+  return `<p class="desc">${esc(a.desc)}</p>${list}${a.id === 'ezequiel' ? diffHTML() : ''}<section><h3>Siguiente paso</h3><p class="next">${esc(a.next)}</p></section><section><h3>Abrir en Drive</h3><div class="links">${links.join('')}</div></section>`;
 }
 function chatHTML(a){
   return `<div class="chat">
@@ -744,7 +788,230 @@ function showSummary(){ selected = null; CUR = null; panel.classList.remove('cha
     afterCap();
   }, () => {});
 })();
+/* ---------------- Datos en vivo desde Google Sheets ---------------- */
+const SHEETS = 'Google Sheets';
+const IN_P = {spreadsheetId:'1XfGCRN1upZsfr0ZAN2Lp-w_dHbUpBMMfcPjOKhY7ysU', range:'Pendientes!A1:L300'};
+const IN_D = {spreadsheetId:'1UsshQVTwSX_14XJ59JhlfzKI_jAceGGakVTEvMI4j9I', range:'Diferencias!A1:L120'};
+const WOPTS = {cache:{staleTime:60000, gcTime:604800000}, refetchInterval:300000};
+const norm = s => String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+const DIFFS_SNAP = [
+  ['10085218', 'TUBO 1000MM X 2.50 C-76 C-III B', 62, 61],
+  ['10085219', 'TUBO 300MM X 1.25 C-76 C-III B', 118, 109],
+  ['10086607', 'TUBO 400MM X 2.50 C-76 C-III B', 131, 130],
+  ['10085231', 'TUBO 500MM X 1.25 C-76 C-III B', 26, 20],
+  ['10085247', 'TUBO 500MM X 2.50 C-14 C-1', 41, 56],
+  ['10085232', 'TUBO 500MM X 2.50 C-76 C-III B', 158, 148],
+  ['10085234', 'TUBO 600MM X 2.50 C-76 C-III B', 88, 87],
+  ['10085236', 'TUBO 800MM X 1.25 C-76 C-III B', 64, 66],
+  ['10085237', 'TUBO 800MM X 2.50 C-76 C-III B', 208, 209],
+  ['10085239', 'TUBO 900MM X 2.50 C-76 C-III B', 202, 201],
+  ['10085241', 'TUBO MC 1200MM X 2.50 C-76 C-III B', 58, 57],
+  ['10085244', 'TUBO MC 1800MM X 2.50 C-76 C-III B', 53, 50]
+].map(([mat, desc, sys, fis]) => ({mat, desc, sys, fis, dif:fis - sys,
+  estado:mat === '10085234' ? 'Abierto' : 'Esperando respuesta',
+  causa:mat === '10085234' ? 'Kattia (18/11) indica sistema 6 / físico 26 en el pedido Meco 4500174247' : '',
+  notas:mat === '10085232' ? 'Considerar el remito 344490915 (8 tubos facturados sin retirar)' : ''}));
+let DIFFS = DIFFS_SNAP, DIFFS_LIVE = false;
+function diffHTML(){
+  const src = `<span class="src">${DIFFS_LIVE ? 'en vivo' : 'foto 23 nov'}</span>`;
+  const rows = DIFFS.filter(r => norm(r.estado) !== 'cerrado');
+  if(!rows.length) return `<section><h3>Diferencias de inventario ${src}</h3><p class="empty">No hay diferencias abiertas.</p></section>`;
+  const net = rows.reduce((t, r) => t + r.dif, 0), waiting = rows.filter(r => norm(r.estado).startsWith('esperando')).length;
+  const top = rows.slice().sort((a, b) => Math.abs(b.dif) - Math.abs(a.dif)).slice(0, 4);
+  return `<section><h3>Diferencias de inventario ${src}</h3>
+    <p class="sub" style="margin:0 0 8px">${plural(rows.length, 'material', 'materiales')} · neto ${fmtSigned(net)} · ${waiting} esperando respuesta</p>
+    <ul class="items">${top.map(r => `<li><div class="row"><span class="st ${r.dif < 0 ? 'late' : 'later'}">${fmtSigned(r.dif)}</span><span class="tx"><p>${esc(r.desc)}</p><small>${esc(r.mat)} · sistema ${esc(r.sys)} · físico ${esc(r.fis)}${r.estado ? ' · ' + esc(r.estado) : ''}</small></span></div></li>`).join('')}</ul></section>`;
+}
+
+const LIVE = {status:'snapshot', msg:'', action:null, at:null, unsub:[], busy:false, sigP:'', sigD:''};
+let MCP = null, PERMS = null;
+const hhmm = ms => { const d = new Date(ms); let h = d.getHours(); const m = String(d.getMinutes()).padStart(2, '0'); const ap = h < 12 ? 'a. m.' : 'p. m.'; h = h % 12 || 12; return `${h}:${m} ${ap}`; };
+function ago(ms){ const s = Math.max(0, (Date.now() - ms)/1000); if(s < 60) return 'justo ahora'; if(s < 3600) return `hace ${Math.round(s/60)} min`; return 'a las ' + hhmm(ms); }
+const REFRESH_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>';
+function renderLive(){
+  const el = $('#live'); if(!el) return;
+  const st = LIVE.status;
+  let html;
+  if(st === 'live') html = `<span class="lv on"><i></i>En vivo · actualizado ${ago(LIVE.at)}</span><button type="button" class="lvicon${LIVE.busy ? ' spin' : ''}" id="lvRefresh" aria-label="Actualizar ahora" title="Actualizar ahora">${REFRESH_SVG}</button>${LIVE.msg ? `<span class="lv">${esc(LIVE.msg)}</span>` : ''}`;
+  else if(st === 'connecting') html = `<span class="lv wait"><i></i>Leyendo tu hoja de pendientes…</span>`;
+  else if(st === 'ask') html = `<span class="lv"><i></i>Foto del 23 de noviembre</span><button type="button" class="lvbtn" id="lvGo">Leer mi hoja en vivo</button>`;
+  else if(st === 'error') html = `<span class="lv err"><i></i>${esc(LIVE.msg)}</span>${LIVE.action === 'approve' ? '<button type="button" class="lvbtn" id="lvGo">Permitir lectura</button>' : LIVE.action === 'perms' ? '<button type="button" class="lvbtn ghost" id="lvPerms">Revisar permisos</button>' : LIVE.action === 'retry' ? '<button type="button" class="lvbtn ghost" id="lvGo">Reintentar</button>' : ''}`;
+  else html = `<span class="lv"><i></i>Foto del 23 de noviembre</span>`;
+  el.innerHTML = html;
+  const go = $('#lvGo'); if(go) go.addEventListener('click', oneShot);
+  const rf = $('#lvRefresh'); if(rf) rf.addEventListener('click', refreshNow);
+  const pm = $('#lvPerms'); if(pm) pm.addEventListener('click', openPerms);
+}
+function setLive(status, msg = '', action = null){ LIVE.status = status; LIVE.msg = msg; LIVE.action = action; renderLive(); }
+setInterval(() => { if(LIVE.status === 'live') renderLive(); }, 60000);
+
+function findValues(p, depth = 0){
+  if(p == null || depth > 4) return null;
+  if(typeof p === 'string'){ try { return findValues(JSON.parse(p), depth + 1); } catch(e){ return null; } }
+  if(Array.isArray(p)) return p.length && Array.isArray(p[0]) ? p : null;
+  if(typeof p === 'object'){
+    if(Array.isArray(p.values)) return p.values;
+    for(const k of Object.keys(p)){ const v = findValues(p[k], depth + 1); if(v) return v; }
+  }
+  return null;
+}
+function headerIndex(values, key){ for(let i = 0; i < Math.min(values.length, 5); i++){ if((values[i] || []).some(c => norm(c).startsWith(key))) return i; } return -1; }
+const colOf = (H, ...keys) => H.findIndex(c => keys.some(k => norm(c).startsWith(k)));
+const cellOf = (r, i) => i < 0 ? '' : String(r[i] == null ? '' : r[i]).trim();
+function parseDate(v){
+  const s = String(v == null ? '' : v).trim(); let m, y, mo, d;
+  if((m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/))){ d = +m[1]; mo = +m[2]; y = +m[3]; }
+  else if((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))){ y = +m[1]; mo = +m[2]; d = +m[3]; }
+  else return null;
+  if(mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+  return `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+}
+const parseNum = v => { const n = Number(String(v == null ? '' : v).replace(/[^\d\-.,]/g, '').replace(',', '.')); return isFinite(n) ? n : 0; };
+const AGENT_KEYS = {enrique:'enrique', jeniffer:'jeniffer', jennifer:'jeniffer', yeniffer:'jeniffer', lilliana:'lilliana', liliana:'lilliana', ezequiel:'ezequiel', alejandro:'alejandro', fabiola:'fabiola'};
+function parsePendientes(values){
+  const hi = headerIndex(values, 'pendiente'); if(hi < 0) return null;
+  const H = values[hi];
+  const c = {t:colOf(H, 'pendiente'), det:colOf(H, 'detalle'), who:colOf(H, 'quien'), ag:colOf(H, 'agente'), due:colOf(H, 'fecha limite', 'fecha lim', 'vence'), sit:colOf(H, 'situacion'), prio:colOf(H, 'prioridad')};
+  if(c.t < 0) return null;
+  const out = {}; AGENTS.forEach(a => { out[a.id] = []; });
+  for(const r of values.slice(hi + 1)){
+    const t = cellOf(r, c.t); if(!t) continue;
+    const sit = cellOf(r, c.sit); if(norm(sit) === 'cerrado') continue;
+    const id = AGENT_KEYS[norm(cellOf(r, c.ag)).split(/\s+/)[0]] || 'lilliana';
+    out[id].push({t, d:parseDate(cellOf(r, c.due)), sit, n:(norm(sit) && norm(sit) !== 'abierto') ? sit : '', detail:cellOf(r, c.det), who:cellOf(r, c.who), prio:cellOf(r, c.prio)});
+  }
+  return out;
+}
+function parseDiffs(values){
+  const hi = headerIndex(values, 'material'); if(hi < 0) return null;
+  const H = values[hi];
+  const c = {mat:colOf(H, 'material'), desc:colOf(H, 'descripcion'), sys:colOf(H, 'stock', 'sistema'), fis:colOf(H, 'conteo', 'fisico'), dif:colOf(H, 'diferencia'), causa:colOf(H, 'causa'), estado:colOf(H, 'estado'), notas:colOf(H, 'notas')};
+  if(c.mat < 0) return null;
+  return values.slice(hi + 1).filter(r => { const m = norm(cellOf(r, c.mat)); return m && m !== 'total'; }).map(r => {
+    const sys = parseNum(cellOf(r, c.sys)), fis = parseNum(cellOf(r, c.fis)), dr = cellOf(r, c.dif);
+    return {mat:cellOf(r, c.mat), desc:cellOf(r, c.desc), sys, fis, dif:dr ? parseNum(dr) : fis - sys, causa:cellOf(r, c.causa), estado:cellOf(r, c.estado), notas:cellOf(r, c.notas)};
+  });
+}
+function todayRef(){ const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); }
+function applyPendientes(values, at){
+  const ref = todayRef(), sig = ref.toDateString() + JSON.stringify(values);
+  LIVE.busy = false;
+  if(sig === LIVE.sigP && DATA.mode === 'live'){ LIVE.at = at; setLive('live'); return; }
+  const parsed = parsePendientes(values);
+  if(!parsed){ if(DATA.mode !== 'live') setLive('error', 'La hoja de pendientes no tiene el formato esperado.', 'retry'); return; }
+  LIVE.sigP = sig;
+  AGENTS.forEach(a => { a.items = parsed[a.id]; });
+  DATA = {mode:'live', ref};
+  LIVE.at = at;
+  recompute(); LIVE.status = 'live'; LIVE.msg = ''; LIVE.action = null;
+  refreshAll();
+}
+function applyDiffs(values){
+  const sig = JSON.stringify(values); if(sig === LIVE.sigD && DIFFS_LIVE) return;
+  const rows = parseDiffs(values); if(!rows) return;
+  LIVE.sigD = sig; DIFFS = rows; DIFFS_LIVE = true;
+  if(selected === 'ezequiel' && TAB === 'ficha'){ const keep = panel.scrollTop; renderAgent(byId('ezequiel')); panel.scrollTop = keep; }
+}
+function revertSnapshot(){
+  DIFFS = DIFFS_SNAP; DIFFS_LIVE = false; LIVE.sigD = '';
+  if(DATA.mode === 'snapshot') return;
+  AGENTS.forEach(a => { a.items = SNAP_ITEMS[a.id].map(x => ({...x})); });
+  DATA = {mode:'snapshot', ref:SNAP}; LIVE.at = null; LIVE.sigP = '';
+  recompute(); refreshAll();
+}
+function refreshAll(){
+  renderChrome();
+  const keep = panel.scrollTop;
+  if(!selected) renderSummary();
+  else if(TAB === 'ficha') renderAgent(byId(selected));
+  panel.scrollTop = keep;
+  if(W && W.refresh) W.refresh();
+}
+async function initLive(){
+  const CL = window.claude;
+  if(!CL || typeof CL.use !== 'function'){ setLive('snapshot'); return; }
+  try { [MCP, PERMS] = await Promise.all([CL.use('mcp'), CL.use('permissions')]); } catch(e){ MCP = null; }
+  if(!MCP){ setLive('snapshot'); return; }
+  let st = 'prompt';
+  if(PERMS){ try { st = await PERMS.state('mcp:' + SHEETS); } catch(e){ st = 'prompt'; } }
+  if(st === 'granted') startWatch();
+  else if(st === 'denied') setLive('error', 'No diste permiso para leer Google Sheets en esta página.', 'perms');
+  else setLive('ask');
+}
+function startWatch(){
+  stopWatch();
+  if(LIVE.status !== 'live') setLive('connecting');
+  try {
+    LIVE.unsub.push(MCP.watchTool(SHEETS, 'get_values', IN_P, ev => onEvent('p', ev), WOPTS));
+    LIVE.unsub.push(MCP.watchTool(SHEETS, 'get_values', IN_D, ev => onEvent('d', ev), WOPTS));
+  } catch(e){ stopWatch(); setLive('error', 'No se pudo leer la hoja ahora. Intenta de nuevo.', 'retry'); }
+}
+function stopWatch(){ LIVE.unsub.forEach(u => { try { u(); } catch(e){} }); LIVE.unsub = []; }
+function onEvent(kind, ev){
+  if(!ev) return;
+  if(ev.type === 'data'){
+    const values = findValues(ev.result && ev.result.payload);
+    const at = (ev.result && ev.result.cache && ev.result.cache.storedAt) || Date.now();
+    if(kind === 'p'){
+      if(values) applyPendientes(values, at);
+      else if(DATA.mode !== 'live') setLive('error', 'La hoja de pendientes llegó vacía.', 'retry');
+    } else if(values) applyDiffs(values);
+    return;
+  }
+  handleErr(kind, ev.error);
+}
+const DENIALS = {
+  needs_reauth:['Tu conexión con Google Sheets venció. Reconéctala en claude.ai → Configuración → Conectores.', null],
+  server_not_connected:['Agrega Google Sheets en claude.ai → Configuración → Conectores para leer tu hoja.', null],
+  selection_required:['Tienes más de una conexión de Google Sheets: elige cuál usar cuando claude.ai te lo pregunte.', null],
+  server_not_found:['Tu conexión de Google Sheets ya no existe. Vuelve a agregarla en claude.ai → Configuración → Conectores.', null],
+  blocked_by_policy:['Tu organización no permite usar Google Sheets en esta página.', null],
+  not_in_manifest:['No se dio permiso para leer Google Sheets en esta página.', 'perms'],
+  approval_required:['Falta tu aprobación para leer la hoja.', 'approve'],
+  consent_required:['Falta tu permiso para leer la hoja.', 'approve']
+};
+function handleErr(kind, e){
+  const code = e && e.code;
+  LIVE.busy = false;
+  if(code === 'not_granted' || code === 'capability_disabled' || code === 'capability_removed'){ stopWatch(); revertSnapshot(); setLive('snapshot'); return; }
+  if(code === 'user_changed'){ stopWatch(); return; }
+  if(DENIALS[code]){
+    if(kind === 'd'){ DIFFS = DIFFS_SNAP; DIFFS_LIVE = false; LIVE.sigD = ''; return; }
+    revertSnapshot(); setLive('error', DENIALS[code][0], DENIALS[code][1]);
+    return;
+  }
+  if(kind === 'd') return;
+  if(DATA.mode === 'live') setLive('live', 'No se pudo actualizar; se muestra la última lectura.');
+  else if(code === 'tool_error') setLive('error', 'Google Sheets no pudo leer la hoja. Revisa que siga existiendo la pestaña "Pendientes".', 'retry');
+  else setLive('error', 'No se pudo leer la hoja ahora. Intenta de nuevo.', 'retry');
+}
+async function oneShot(){
+  if(!MCP || LIVE.busy) return;
+  LIVE.busy = true; setLive('connecting');
+  try {
+    const res = await MCP.callTool(SHEETS, 'get_values', IN_P, {cache:{staleTime:0, gcTime:604800000, refresh:true}});
+    const values = findValues(res && res.payload);
+    LIVE.busy = false;
+    if(!values){ setLive('error', 'La hoja de pendientes llegó vacía.', 'retry'); return; }
+    applyPendientes(values, (res.cache && res.cache.storedAt) || Date.now());
+    startWatch();
+  } catch(e){ handleErr('p', e); }
+}
+function refreshNow(){
+  if(!MCP || LIVE.busy) return;
+  if(!LIVE.unsub.length){ oneShot(); return; }
+  LIVE.busy = true; renderLive();
+  Promise.all([MCP.invalidate(SHEETS, 'get_values', IN_P), MCP.invalidate(SHEETS, 'get_values', IN_D)]).catch(() => {});
+  setTimeout(() => { if(LIVE.busy){ LIVE.busy = false; renderLive(); } }, 15000);
+}
+function openPerms(){
+  if(!PERMS){ setLive('error', 'Activa Google Sheets en el menú Permisos del artefacto.', null); return; }
+  PERMS.manage().then(() => initLive(), () => setLive('error', 'Abre el menú Permisos del artefacto y activa Google Sheets.', null));
+}
+
+$('#navWorld').addEventListener('click', () => { showSummary(); if(W) W.home(); });
 renderChrome(); renderSummary();
+initLive();
 
 /* ---------------- Mundo 3D ---------------- */
 function fail(msg){
@@ -987,27 +1254,32 @@ function buildWorld(){
       }
     });
   }
-  const tvTex = tex(768, 432, (x, w, h) => {
+  const drawTV = (x, w, h) => {
     const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#13203b'); g.addColorStop(1, '#1d3363'); x.fillStyle = g; x.fillRect(0, 0, w, h);
     x.fillStyle = '#ffffff'; x.font = FD(800, 34); x.fillText('Resumen del equipo', 34, 60);
-    x.fillStyle = '#9fb3d9'; x.font = FB(500, 20); x.fillText('Lunes 23 de noviembre', 36, 92);
-    [[COUNTS.total, 'pendientes', '#ffffff'], [COUNTS.late, 'vencido', '#ff7b7b'], [COUNTS.today, 'vencen hoy', '#ffad66'], [COUNTS.week, 'esta semana', '#ffd36b']].forEach(([v, t, col], i) => {
+    x.fillStyle = '#9fb3d9'; x.font = FB(500, 20); x.fillText(refLabel(true) + (DATA.mode === 'live' ? ' · en vivo' : ''), 36, 92);
+    [[COUNTS.total, 'pendientes', '#ffffff'], [COUNTS.late, COUNTS.late === 1 ? 'vencido' : 'vencidos', '#ff7b7b'], [COUNTS.today, COUNTS.today === 1 ? 'vence hoy' : 'vencen hoy', '#ffad66'], [COUNTS.week, 'esta semana', '#ffd36b']].forEach(([v, t, col], i) => {
       const X = 34 + i*178; x.fillStyle = 'rgba(255,255,255,.08)'; rr(x, X, 118, 160, 104, 14); x.fill();
       x.fillStyle = col; x.font = FD(800, 50); x.fillText(String(v), X + 16, 178); x.fillStyle = '#c3d0ea'; x.font = FB(500, 18); x.fillText(t, X + 16, 206);
     });
     const ag = AGENTS.filter(a => a.id !== 'enrique'); const max = Math.max(...ag.map(a => a.items.length), 1);
     ag.forEach((a, i) => { const Y = 254 + i*34; x.fillStyle = '#c3d0ea'; x.font = FB(600, 18); x.fillText(a.name, 36, Y + 16); x.fillStyle = 'rgba(255,255,255,.1)'; rr(x, 170, Y, 520, 20, 10); x.fill(); x.fillStyle = a.look.tone || a.look.torso; rr(x, 170, Y, Math.max(20, 520*a.items.length/max), 20, 10); x.fill(); x.fillStyle = '#ffffff'; x.font = FB(700, 17); x.fillText(String(a.items.length), 704, Y + 16); });
-  });
-  const kanbanTex = tex(640, 360, (x, w, h) => {
+  };
+  const tvTex = tex(768, 432, drawTV);
+  const drawKanban = (x, w, h) => {
     x.fillStyle = '#fbfbfc'; x.fillRect(0, 0, w, h);
     x.fillStyle = '#17202b'; x.font = FD(800, 28); x.fillText(`Pendientes del equipo · ${COUNTS.total}`, 22, 44);
     const cols = [['Urgente', COUNTS.late + COUNTS.today, '#ff8f8f'], ['Esta semana', COUNTS.week, '#ffd86b'], ['Más adelante', COUNTS.later, '#93dcaa'], ['Sin fecha', COUNTS.none, '#d5dbe3']];
     cols.forEach(([t, n, col], i) => {
       const X = 18 + i*156; x.fillStyle = '#eef1f5'; rr(x, X, 62, 146, h - 78, 10); x.fill();
       x.fillStyle = '#3b4350'; x.font = FB(700, 16); x.fillText(`${t} (${n})`, X + 10, 88);
-      for(let k = 0; k < n; k++){ const col2 = k % 2, row = Math.floor(k/2); const nx = X + 10 + col2*66, ny = 100 + row*52; x.save(); x.translate(nx + 29, ny + 22); x.rotate((rnd() - .5)*.12); x.fillStyle = col; x.fillRect(-29, -22, 58, 44); x.fillStyle = 'rgba(0,0,0,.18)'; x.fillRect(-21, -10, 38, 4); x.fillRect(-21, 0, 28, 4); x.restore(); }
+      const shown = n > 10 ? 9 : n;
+      for(let k = 0; k < shown; k++){ const col2 = k % 2, row = Math.floor(k/2); const nx = X + 10 + col2*66, ny = 100 + row*52; x.save(); x.translate(nx + 29, ny + 22); x.rotate((rnd() - .5)*.12); x.fillStyle = col; x.fillRect(-29, -22, 58, 44); x.fillStyle = 'rgba(0,0,0,.18)'; x.fillRect(-21, -10, 38, 4); x.fillRect(-21, 0, 28, 4); x.restore(); }
+      if(n > 10){ x.fillStyle = '#3b4350'; x.font = FB(700, 18); x.fillText(`+${n - 9}`, X + 86, 100 + 4*52 + 28); }
     });
-  });
+  };
+  const kanbanTex = tex(640, 360, drawKanban);
+  const redraw = (t, draw) => { const c = t.image, x = c.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, c.width, c.height); draw(x, c.width, c.height); t.needsUpdate = true; };
   const menuTex = tex(256, 330, (x, w, h) => {
     x.fillStyle = '#8b5a33'; x.fillRect(0, 0, w, h); x.fillStyle = '#26332d'; x.fillRect(12, 12, w - 24, h - 24);
     x.fillStyle = '#f4f1e8'; x.textAlign = 'center'; x.font = FD(800, 40); x.fillText('CAFÉ', w/2, 66);
@@ -1558,12 +1830,13 @@ function buildWorld(){
   addRoom('Patio de prefabricados', 21.25, 1.2, .2);
   addRoom('Estacionamiento', -11.5, .3, 12.0);
   const tagEls = {};
+  const tagInner = a => `<i class="dot" style="background:${STATUS[a.status].w}"></i><span>${esc(a.name)}</span>${a.items.length ? `<b class="n">${a.items.length}</b>` : ''}`;
   let hoverId = null;
   function setHover(id){ if(hoverId === id) return; if(hoverId && tagEls[hoverId]) tagEls[hoverId].classList.remove('hov'); hoverId = id; if(id && tagEls[id]) tagEls[id].classList.add('hov'); }
   AGENTS.forEach(a => {
     const el = document.createElement('button'); el.type = 'button'; el.className = 'tag'; el.dataset.id = a.id;
     el.setAttribute('aria-label', `${a.name}, ${a.role}. ${a.statusText}`);
-    el.innerHTML = `<i class="dot" style="background:${STATUS[a.status].w}"></i><span>${esc(a.name)}</span>${a.items.length ? `<b class="n">${a.items.length}</b>` : ''}`;
+    el.innerHTML = tagInner(a);
     el.addEventListener('click', () => select(a.id, 'world'));
     el.addEventListener('mouseenter', () => setHover(a.id)); el.addEventListener('mouseleave', () => setHover(null));
     labelsEl.appendChild(el); tagEls[a.id] = el;
@@ -1726,7 +1999,11 @@ function buildWorld(){
     if(first){ first = false; $('#loading').hidden = true; }
   });
   function talk(id, on){ const f = figs[id]; if(f) f.talking = !!on; if(tagEls[id]) tagEls[id].classList.toggle('talk', !!on); }
-  return {focus, home, talk};
+  function refresh(){
+    AGENTS.forEach(a => { const el = tagEls[a.id]; if(el) el.innerHTML = tagInner(a); });
+    redraw(tvTex, drawTV); redraw(kanbanTex, drawKanban);
+  }
+  return {focus, home, talk, refresh};
 }
 })();
 </script>
