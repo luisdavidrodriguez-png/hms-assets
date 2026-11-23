@@ -1,0 +1,187 @@
+<title>Oficina HMS</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Concepto: planta isométrica de la oficina, un cuarto por agente; el panel lateral es la ficha del agente seleccionado. */
+:root{
+  --bg:#eef1f5; --fg:#16202c; --muted:#5a6878; --card:#ffffff; --line:#d3dae4;
+  --ground:#c4d9c8; --slab:#dfe5ec; --wallL:#cbd4e0; --wallR:#dbe2ec; --glass:#b5d3ec;
+  --zone1:#d6e1f0; --zone2:#f3dade; --zone3:#e1dbf3; --zone4:#f4e4c8; --zone5:#d0ebe6; --zone6:#f3d7e7; --zoneN:#e7ebf0;
+  --desk:#a67c52; --screen:#27384a; --skin:#f0c9a4; --hair:#3a2a20; --plant:#3c9a5a; --pot:#7d5a42; --table:#7d91a8; --chair:#4a5668;
+  --a1:#274b73; --a2:#c2455a; --a3:#6f56c2; --a4:#d18a24; --a5:#2a9488; --a6:#cc5a97;
+  --ok:#2f9e5b; --warn:#d99a1d; --idle:#8a96a5; --accent:#274b73;
+  --f-head:'Space Grotesk',system-ui,sans-serif; --f-body:'Inter',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e141b; --fg:#e6ecf3; --muted:#9aa7b6; --card:#17202a; --line:#2a3644;
+  --ground:#1d3125; --slab:#26313d; --wallL:#2a3543; --wallR:#344150; --glass:#35597a;
+  --zone1:#22324a; --zone2:#49292f; --zone3:#352f59; --zone4:#493920; --zone5:#1f4541; --zone6:#492a3c; --zoneN:#232d38;
+  --desk:#8a6743; --screen:#4aa3c7; --skin:#e9bf98; --hair:#241912; --plant:#3f9d5d; --pot:#6d4d38; --table:#5f7188; --chair:#8996aa;
+  --a1:#6a9ad2; --a2:#e0677b; --a3:#9580e0; --a4:#e3a64a; --a5:#3fb8aa; --a6:#e57fb5;
+  --ok:#43bd78; --warn:#e7b03a; --idle:#7f8b9a; --accent:#6a9ad2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e141b; --fg:#e6ecf3; --muted:#9aa7b6; --card:#17202a; --line:#2a3644;
+  --ground:#1d3125; --slab:#26313d; --wallL:#2a3543; --wallR:#344150; --glass:#35597a;
+  --zone1:#22324a; --zone2:#49292f; --zone3:#352f59; --zone4:#493920; --zone5:#1f4541; --zone6:#492a3c; --zoneN:#232d38;
+  --desk:#8a6743; --screen:#4aa3c7; --skin:#e9bf98; --hair:#241912; --plant:#3f9d5d; --pot:#6d4d38; --table:#5f7188; --chair:#8996aa;
+  --a1:#6a9ad2; --a2:#e0677b; --a3:#9580e0; --a4:#e3a64a; --a5:#3fb8aa; --a6:#e57fb5;
+  --ok:#43bd78; --warn:#e7b03a; --idle:#7f8b9a; --accent:#6a9ad2; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px}
+h1{font-family:var(--f-head);font-size:1.6rem;line-height:1.15;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);font-size:.9rem;margin:0}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+@media (min-width:920px){.layout{grid-template-columns:minmax(0,1fr) 340px;align-items:start}}
+.scene{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.scene svg{display:block;min-width:600px;width:100%;height:auto}
+.team{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;font:500 .85rem var(--f-body);color:var(--fg);background:var(--card);
+  border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chip i{width:10px;height:10px;border-radius:50%;display:block}
+.chip[aria-pressed="true"]{border-color:var(--fg);box-shadow:0 0 0 1px var(--fg) inset}
+.chip:focus-visible,.station:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel h2{font-family:var(--f-head);font-size:1.35rem;margin:0;line-height:1.15}
+.role{color:var(--muted);margin:0;font-size:.9rem}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:3px 10px;width:fit-content}
+.pill b{width:8px;height:8px;border-radius:50%;display:block}
+.panel h3{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 0}
+.panel ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.panel p{margin:0}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{font-size:.85rem;font-weight:500;color:var(--accent);border:1px solid var(--line);border-radius:8px;padding:6px 10px;text-decoration:none}
+.links a:hover{border-color:var(--accent)}
+.note{color:var(--muted);font-size:.8rem;margin:0}
+/* escena */
+.station{cursor:pointer;outline:none}
+.station .fig{transition:transform .15s ease}
+.station:hover .fig,.station:focus-visible .fig{transform:translateY(-4px)}
+.floor{cursor:pointer;stroke:var(--card);stroke-width:1}
+.floor.sel{stroke:var(--fg);stroke-width:2.5}
+.lbl{font:600 10.5px var(--f-body);letter-spacing:.08em;text-transform:uppercase;fill:var(--muted);pointer-events:none}
+.tag text{font:600 13px var(--f-body);fill:var(--fg)}
+@media (prefers-reduced-motion:reduce){.station .fig{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Oficina HMS</h1>
+    <p class="sub">Equipo de agentes de Excelencia Operacional · Holcim Modular Solutions</p>
+  </header>
+  <div class="layout">
+    <div>
+      <div class="scene"><svg id="map" viewBox="0 0 790 520" role="group" aria-label="Plano isométrico de la oficina con seis agentes"></svg></div>
+    </div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+  <div class="team" id="team" role="group" aria-label="Elegir agente"></div>
+  <p class="note">Primera versión. Los pendientes son una foto de la lista maestra al 23 de noviembre de 2026 y no se actualizan solos todavía.</p>
+</div>
+
+<script>
+const D = 'https://drive.google.com/drive/folders/', G = 'https://docs.google.com/document/d/', S = 'https://docs.google.com/spreadsheets/d/';
+const agents = [
+ {id:'enrique', n:'Enrique', rol:'Coordinador del equipo', st:'idle', est:'Por configurar', c:'--a1', zone:[3,0,9,3], z:1, badge:0,
+  desc:'Supervisa a los demás agentes, compara lo entregado contra lo que cada ficha promete y te manda un solo resumen cada mañana con semáforo por agente.',
+  tit:'Qué hará cada día', items:['Revisar los entregables de los cinco agentes','Detectar atrasos y contradicciones entre agentes','Enviarte el resumen del día en menos de una página'],
+  folder:'1VWBxhnIp1AlamWIr1BCvp_-a7F2RacWh', ficha:'1jY_5-zhESX16kkgk7ne5u2wGtZff6sRbpdISPfsaiUo'},
+ {id:'jeniffer', n:'Jeniffer', rol:'Seguimiento y cierre de no conformidades', st:'idle', est:'Por configurar', c:'--a2', zone:[0,3,4,6], z:2, badge:0,
+  desc:'Revisa que ninguna no conformidad quede abierta sin responsable, acción o fecha, y prepara el cierre con su evidencia.',
+  tit:'Siguiente paso', items:['Todavía no tiene conectado el registro de no conformidades','Indicar dónde se registran (AppSheet o Sheet) para conectarla'],
+  folder:'1nx6K_AsCuYALCcktZ1fgsuWYRptjUb7U', ficha:'1T09xupq3rjzdMmkXCkKSmJUU3o8oZKoDjiK1ADm1b2o'},
+ {id:'lilliana', n:'Lilliana', rol:'Correos y pendientes', st:'ok', est:'Activa, bajo demanda', c:'--a3', zone:[4,3,8,6], z:3, badge:4,
+  desc:'Lee tu correo de los últimos 14 días, arma la lista de pendientes con fechas y te dice qué está vencido, qué vence hoy y qué viene esta semana.',
+  tit:'Pendientes de hoy', items:['Minuta semanal de Seguimiento de Operaciones (24/11)','Cotización de etiquetas, martes 24 a las 3:00 pm','Responder a Mariana en Google Chat (vence hoy)','Autoevaluación de desempeño 2026 (sin fecha)'],
+  folder:'1Dcpzaj95S4q7eFJ_61f6jeyscePEd8SC', ficha:'1_ekshqn6Wqyg1Rnlsb_dqt6uS7ChaQ2S_4z6PqsGYo4', hoja:'1XfGCRN1upZsfr0ZAN2Lp-w_dHbUpBMMfcPjOKhY7ysU', hojaN:'Lista de pendientes'},
+ {id:'ezequiel', n:'Ezequiel', rol:'Inventarios de planta', st:'warn', est:'Ficha y hoja listas', c:'--a4', zone:[8,3,12,6], z:4, badge:9,
+  desc:'Compara el inventario del sistema con los conteos físicos, explica las diferencias y prepara los ajustes para tu aprobación.',
+  tit:'Pendientes más urgentes', items:['Comité de inventarios, miércoles 25 a las 11:00 (la invitación a una dirección rebotó)','Seguimiento a Kattia por las diferencias de tubos: 7 días sin respuesta','Aclarar el tubo 600x2.50: 88/87 en tu tabla, 6/26 en el correo de Kattia','Enviar los ajustes de noviembre antes del 5 de diciembre','Auditoría externa EY el 7 de diciembre'],
+  folder:'1PwKVpO33iNUR2Jm7zLt1DINlJFCpjUib', ficha:'14KFv4Ov3LgzfBOnNV9GcoMhOFmXVJjEvRQLahD4zLHw', hoja:'1UsshQVTwSX_14XJ59JhlfzKI_jAceGGakVTEvMI4j9I', hojaN:'Control de diferencias'},
+ {id:'alejandro', n:'Alejandro', rol:'AppSheets y órdenes de cambio', st:'idle', est:'Por configurar', c:'--a5', zone:[0,6,6,9], z:5, badge:4,
+  desc:'Cuida que las apps de AppSheet funcionen, que los datos estén limpios y que cada problema reportado tenga seguimiento.',
+  tit:'Pendientes de hoy', items:['Orden de cambio OC-03 (Yara) fuera de plazo','Confirmar "Enterado" en OC-02 y OC-04 (vence hoy)','SIM de las tablets: llegan el miércoles 25 o jueves 26','Revisar la alerta defectuosa de OC-18'],
+  folder:'1c-ZGcMfDPSj0k38cA7bMuWe9wuaDCkfK', ficha:'1YYOgChpSrq2oKOlFtMDwjERti9nsHFvqZHSeduiWyGs'},
+ {id:'fabiola', n:'Fabiola', rol:'Dashboards e indicadores', st:'idle', est:'Por configurar', c:'--a6', zone:[6,6,12,9], z:6, badge:1,
+  desc:'Verifica que cada dashboard tenga datos al día, detecta cifras raras y propone mejoras de indicadores.',
+  tit:'Pendientes de hoy', items:['Evaluar el indicador "% de cargas aprobadas a la primera en Filtro 3" para los dashboards'],
+  folder:'13Zw9KHAjWTgm9elMcE4xV3Ogq6pnltL0', ficha:'1AjKnpSyeMGzP2R-cDuoCNQhHMnp0RUycYQ5D-9tKQYg'}
+];
+
+const OX=350, OY=130;
+const P=(x,y,z=0)=>[OX+(x-y)*32, OY+(x+y)*16-z];
+const pts=a=>a.map(p=>P(p[0],p[1],p[2]||0).map(n=>n.toFixed(1)).join(',')).join(' ');
+const mix=(c,p)=>`color-mix(in srgb, ${c} ${p}%, #000)`;
+const poly=(a,fill,extra='')=>`<polygon points="${pts(a)}" style="fill:${fill}" ${extra}/>`;
+const box=(x,y,w,d,h,z,c)=>
+  poly([[x,y,z+h],[x+w,y,z+h],[x+w,y+d,z+h],[x,y+d,z+h]],c)+
+  poly([[x,y+d,z],[x+w,y+d,z],[x+w,y+d,z+h],[x,y+d,z+h]],mix(c,80))+
+  poly([[x+w,y,z],[x+w,y+d,z],[x+w,y+d,z+h],[x+w,y,z+h]],mix(c,64));
+const plant=(x,y)=>box(x,y,.38,.38,10,0,'var(--pot)')+box(x-.06,y-.06,.5,.5,24,10,'var(--plant)');
+const person=(x,y,c,sit)=>{const z=sit?4:0;
+  return box(x-.2,y-.2,.4,.4,24,z,c)+box(x-.17,y-.17,.34,.34,15,z+24,'var(--skin)')+box(x-.18,y-.18,.36,.36,6,z+33,'var(--hair)');};
+
+function build(){
+  let s='';
+  s+=poly([[-.8,-.8],[12.8,-.8],[12.8,9.8],[-.8,9.8]],'var(--ground)');
+  s+=box(0,0,12,9,8,-8,'var(--slab)');
+  // suelo neutro y cuartos
+  s+=poly([[0,0],[12,0],[12,9],[0,9]],'var(--zoneN)');
+  agents.forEach(a=>{const [x0,y0,x1,y1]=a.zone;
+    s+=poly([[x0,y0],[x1,y0],[x1,y1],[x0,y1]],`var(--zone${a.z})`,`class="floor" data-id="${a.id}"`);});
+  // paredes y ventanas
+  s+=poly([[0,0,0],[12,0,0],[12,0,70],[0,0,70]],'var(--wallR)');
+  s+=poly([[0,0,0],[0,9,0],[0,9,70],[0,0,70]],'var(--wallL)');
+  [1.2,3.2,9.8].forEach(t=>{s+=poly([[t,0,30],[t+1.4,0,30],[t+1.4,0,58],[t,0,58]],'var(--glass)');});
+  [1.2,3.6,6.2].forEach(t=>{s+=poly([[0,t,30],[0,t+1.4,30],[0,t+1.4,58],[0,t,58]],'var(--glass)');});
+  s+=box(4.4,.02,3.2,.06,34,26,'var(--screen)');
+  // decoración de pasillos
+  s+=box(.7,1.3,1.2,.7,14,0,'var(--table)')+plant(.5,.4)+plant(11.2,.5)+plant(.5,2.4)+plant(11.2,2.4)+box(9.6,1.2,1.4,.8,12,0,'var(--chair)');
+  // estaciones, de atrás hacia adelante
+  let tags='';
+  agents.slice().sort((a,b)=>a.zone[1]-b.zone[1]||a.zone[0]-b.zone[0]).forEach(a=>{
+    const [x0,y0,x1,y1]=a.zone, cx=(x0+x1)/2, cy=(y0+y1)/2, col=`var(${a.c})`;
+    let o='';
+    if(a.id==='enrique'){
+      const tx=cx-1.5, ty=cy-.7;
+      o+=person(cx,ty-.55,col,false)+box(tx,ty,3,1.2,12,0,'var(--table)')+box(tx+.3,ty+.25,.5,.35,3,12,'var(--screen)')+box(tx+2.1,ty+.3,.5,.35,3,12,'var(--screen)');
+    } else {
+      const dx=cx-.9, dy=cy-.7;
+      o+=box(dx+.7,dy-.85,.45,.45,9,0,'var(--chair)')+person(dx+.92,dy-.55,col,true)+box(dx,dy,1.8,.9,13,0,'var(--desk)')+box(dx+.62,dy+.22,.55,.1,18,13,'var(--screen)');
+    }
+    const [tx,ty]=P(cx,y1-.15,0);
+    const w=26+a.n.length*7.6, sc={ok:'var(--ok)',warn:'var(--warn)',idle:'var(--idle)'}[a.st];
+    let tag=`<rect x="${(tx-w/2).toFixed(1)}" y="${(ty-22).toFixed(1)}" width="${w.toFixed(1)}" height="24" rx="7" style="fill:var(--card);stroke:var(--line)"/>`+
+      `<circle cx="${(tx-w/2+12).toFixed(1)}" cy="${(ty-10).toFixed(1)}" r="4.5" style="fill:${sc}"/>`+
+      `<text x="${(tx-w/2+22).toFixed(1)}" y="${(ty-5).toFixed(1)}">${a.n}</text>`;
+    if(a.badge) tag+=`<circle cx="${(tx+w/2).toFixed(1)}" cy="${(ty-22).toFixed(1)}" r="10" style="fill:${col}"/><text x="${(tx+w/2).toFixed(1)}" y="${(ty-17.5).toFixed(1)}" text-anchor="middle" style="fill:#fff;font-size:12px">${a.badge}</text>`;
+    s+=`<g class="station" data-id="${a.id}" tabindex="0" role="button" aria-label="${a.n}, ${a.rol}"><g class="fig">${o}</g></g>`;
+    tags+=`<g class="tag" data-id="${a.id}" style="cursor:pointer">${tag}</g>`;
+  });
+  s+=tags;
+  document.getElementById('map').innerHTML=s;
+}
+
+function select(id){
+  const a=agents.find(x=>x.id===id); if(!a) return;
+  document.querySelectorAll('.floor').forEach(f=>f.classList.toggle('sel',f.dataset.id===id));
+  document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',String(c.dataset.id===id)));
+  const dot={ok:'var(--ok)',warn:'var(--warn)',idle:'var(--idle)'}[a.st];
+  let links=`<a href="${D+a.folder}" target="_blank" rel="noopener">Carpeta</a><a href="${G+a.ficha}/edit" target="_blank" rel="noopener">Ficha</a>`;
+  if(a.hoja) links+=`<a href="${S+a.hoja}/edit" target="_blank" rel="noopener">${a.hojaN}</a>`;
+  document.getElementById('panel').innerHTML=
+    `<span class="pill"><b style="background:${dot}"></b>${a.est}</span>`+
+    `<div><h2>${a.n}</h2><p class="role">${a.rol}</p></div>`+
+    `<p>${a.desc}</p><h3>${a.tit}</h3><ul>${a.items.map(i=>`<li>${i}</li>`).join('')}</ul>`+
+    `<h3>Abrir en Drive</h3><div class="links">${links}</div>`;
+}
+
+build();
+document.getElementById('team').innerHTML=agents.map(a=>`<button class="chip" data-id="${a.id}" aria-pressed="false"><i style="background:var(${a.c})"></i>${a.n}</button>`).join('');
+document.addEventListener('click',e=>{const t=e.target.closest('[data-id]'); if(t) select(t.dataset.id);});
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('station')){e.preventDefault();select(e.target.dataset.id);}});
+select('lilliana');
+</script>
