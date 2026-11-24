@@ -143,6 +143,13 @@ button.row:hover{border-color:var(--line);background:var(--surface)}
 .lv.err{color:var(--late)} .lv.err i{background:var(--late)}
 .lvbtn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:999px;padding:4px 10px;font:600 11.5px var(--f-body);cursor:pointer}
 .lvbtn.ghost{background:none;color:var(--accent)}
+.meetcard{margin:2px 0 8px 34px;border:1px solid var(--border2);border-radius:14px;background:var(--surface);padding:12px 14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.meetcard .mc-h{display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:6px}
+.meetcard .mc-ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);flex:none}
+.meetcard dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0 0 10px;font-size:12.5px}
+.meetcard dt{color:var(--muted)} .meetcard dd{margin:0;overflow-wrap:anywhere}
+.meetcard .mc-act{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.meetcard .mc-ok{margin:0 6px 0 0;color:var(--ok);font-weight:600;font-size:12.5px} .meetcard .mc-err{margin:0 0 4px;flex-basis:100%;color:var(--late);font-size:12.5px}
 .lvicon{width:26px;height:26px;border-radius:8px;border:0;background:var(--surface-2);display:grid;place-items:center;cursor:pointer;color:var(--fg)}
 .lvicon:hover{color:var(--accent)}
 .lvicon.spin svg{animation:spin 1s linear infinite}
@@ -446,23 +453,24 @@ const ICON = {
   send:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>',
   stop:'<svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor"/></svg>',
   mic:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  cal:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>',
   chev:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>'
 };
 const GREET = {
   enrique:'Hola, Luis David. Soy Enrique, el coordinador. Veo los pendientes de todo el equipo. ¿Qué quieres revisar?',
-  jeniffer:'Hola, Luis David. Soy Jeniffer, de no conformidades. Todavía no tengo conectado el registro de NC, pero te ayudo a preparar cómo darles seguimiento.',
-  lilliana:'Hola, Luis David. Soy Lilliana. Revisé tus correos del 9 al 23 de noviembre. Pregúntame qué te toca o pídeme un borrador.',
+  jeniffer:'Hola, Luis David. Soy Jeniffer, de no conformidades. Tengo las NC de la carpeta oficial: cuáles están abiertas, en verificación o esperando el recibido de Karla. ¿Cuál revisamos?',
+  lilliana:'Hola, Luis David. Soy Lilliana. Tengo tu lista de pendientes al día y también te agendo reuniones en Meet: dime de qué es y con quién, y te busco los horarios libres.',
   ezequiel:'Hola, Luis David. Soy Ezequiel, de inventarios. Tengo las diferencias de tubos, el acero y las fechas de los ajustes. ¿Por dónde empezamos?',
-  alejandro:'Hola, Luis David. Soy Alejandro, de AppSheets. Tengo las órdenes de cambio y las alertas que llegaron a tu correo.',
-  fabiola:'Hola, Luis David. Soy Fabiola, de dashboards. Aún no sé qué dashboards usa la planta, pero podemos pensar en indicadores.'
+  alejandro:'Hola, Luis David. Soy Alejandro, de AppSheets. Revisé tus apps en el editor: tengo los hallazgos y las correcciones que propongo. ¿Por cuál empezamos?',
+  fabiola:'Hola, Luis David. Soy Fabiola, de dashboards. Actualizo la base de datos del Centro de Operaciones HMS cada lunes. ¿Qué indicador revisamos?'
 };
 const SUGS = {
-  enrique:['¿Cómo está el equipo hoy?', '¿Qué es lo más urgente esta semana?', '¿Qué agente configuro primero?'],
-  jeniffer:['¿Qué necesitas para empezar?', '¿Cómo le darías seguimiento a una no conformidad?'],
-  lilliana:['¿Qué me toca hoy?', '¿Qué correos debo responder primero?', 'Arma la estructura de la minuta semanal'],
+  enrique:['¿Cómo está el equipo hoy?', '¿Qué es lo más urgente esta semana?', '¿Qué le falta a cada agente?'],
+  jeniffer:['¿Qué NC están más atrasadas?', '¿Qué causas se repiten?'],
+  lilliana:['¿Qué me toca hoy?', 'Agéndame una reunión en Meet', '¿Qué correos debo responder primero?'],
   ezequiel:['¿Cómo preparo el comité del miércoles?', 'Redacta el seguimiento a Kattia por los tubos', '¿Qué falta para los ajustes del 5 de diciembre?'],
-  alejandro:['¿Qué hago con la OC-03 vencida?', '¿Qué revisarías de la alerta de OC-18?'],
-  fabiola:['¿Cómo calcularías el KPI del Filtro 3?', '¿Qué indicadores propones para producción?']
+  alejandro:['¿Qué hallazgos son más graves?', '¿Cómo restauro la OC-03?'],
+  fabiola:['¿Qué actualizas cada lunes?', '¿Por qué el OEE no es confiable?']
 };
 const DAYS_L = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
 const MONTHS_L = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
@@ -484,7 +492,7 @@ const EXTRA = {
     'Minuta de Seguimiento de Operaciones: Luis David la envió el 10/11 y el 16/11 al equipo de Operaciones con el archivo MINUTA SEGUIMIENTO OPERACIONES 2026.xlsx. No conoces el contenido del archivo. Toca la de esta semana.',
     'Mariana Sánchez escribió por Google Chat el 20/11: "Igual no son muchos los que están pendientes Luis David". No se sabe a qué pendientes se refiere.',
     'La lista completa está en la hoja "Lista maestra de pendientes - Lilliana" en Drive.',
-    'Agendar reuniones en Meet: desde este chat no puedes ver calendarios ni crear eventos. Si Luis David quiere agendar, pregúntale el tema, con quién, la duración y el rango de fechas, y dile que te lo pida en la conversación de la Oficina en Claude: ahí revisas la disponibilidad real de los invitados en Google Calendar, le propones horarios y creas la reunión con enlace de Meet solo cuando él confirma.'
+    'Agendar reuniones en Meet: si en este chat no tienes las herramientas buscar_contacto, buscar_horarios y proponer_reunion, pregúntale el tema, con quién, la duración y el rango de fechas, y dile que te lo pida en la conversación de la Oficina en Claude.'
   ],
   ezequiel:[
     'Luis David le envió esas diferencias a Kattia Hidalgo el 16/11 (con copia a Daniela Jiménez, Erika Barbosa y José Alfredo Rojas) para validar si corresponden a refactura o a ajuste. Kattia no ha respondido ese correo.',
@@ -643,6 +651,7 @@ function renderMsgs(a){
   box.textContent = '';
   box.appendChild(aiBubble(a, GREET[a.id], null));
   c.turns.forEach(t => box.appendChild(t.role === 'user' ? userBubble(t) : aiBubble(a, t.content, t)));
+  const pc = proposalCard(a, c); if(pc) box.appendChild(pc);
   const sg = $('#sugs');
   if(sg){
     sg.hidden = c.turns.length > 0;
@@ -671,7 +680,7 @@ function refreshComposer(a){
   mic.hidden = off || !DICT || !DICT_OK;
   mic.classList.toggle('rec', DLISTEN); mic.setAttribute('aria-pressed', String(DLISTEN));
   mic.title = DLISTEN ? 'Detener el dictado' : 'Dictar por voz';
-  if(!note.dataset.flash) note.textContent = SSTATE === 'loading' ? 'Conectando con Claude…' : off ? OFFMSG : c.busy ? `${a.name} está escribiendo…` : 'Responde con los datos del 23 de noviembre. No envía correos: te da borradores.';
+  if(!note.dataset.flash) note.textContent = SSTATE === 'loading' ? 'Conectando con Claude…' : off ? OFFMSG : c.busy ? `${a.name} está escribiendo…` : a.id === 'lilliana' ? 'Agenda reuniones en Meet solo cuando tú lo confirmas. No envía correos: te da borradores.' : 'Responde con los datos de su hoja. No envía correos ni cambia sistemas.';
   const sg = $('#sugs'); if(sg) sg.querySelectorAll('button').forEach(b => { b.disabled = off || c.busy; });
   const nb = $('#newChat'); if(nb) nb.hidden = !(c.turns.length && !c.busy);
 }
@@ -702,7 +711,7 @@ function wireChat(a){
       afterCap();
     });
   });
-  nb.addEventListener('click', () => { const c = chatOf(a.id); if(c.busy) return; c.turns = []; renderMsgs(a); });
+  nb.addEventListener('click', () => { const c = chatOf(a.id); if(c.busy) return; c.turns = []; if(c.proposal && c.proposal.status !== 'creating') c.proposal = null; renderMsgs(a); });
 }
 function errCopy(e){
   const code = e && e.code;
@@ -725,9 +734,12 @@ async function send(a, raw){
   if(W) W.talk(a.id, true);
   renderMsgs(a);
   const hist = c.turns.filter(t => t !== reply && !t.failed && t.content).slice(-16).map(t => ({role:t.role, content:t.content}));
-  const input = [{role:'user', content:rulesFor(a)}, ...hist];
+  const useTools = a.id === 'lilliana' && await toolsOk();
+  const input = [{role:'user', content:rulesFor(a) + (useTools ? schedRules() : '')}, ...hist];
   try {
-    const res = await SAMPLE(input, {modelTier:'quick', cache:false, signal:ctl.signal, onText:({text:t}) => { reply.content = t; paintReply(reply); }});
+    const opts = {modelTier:'quick', signal:ctl.signal, onText:({text:t}) => { reply.content = t; paintReply(reply); }};
+    if(useTools) opts.tools = schedTools(a); else opts.cache = false;
+    const res = await SAMPLE(input, opts);
     reply.content = res.text;
     if(res.truncated) reply.note = 'La respuesta quedó cortada. Pide algo más corto.';
   } catch(e){
@@ -785,6 +797,116 @@ function showSummary(){ selected = null; CUR = null; panel.classList.remove('cha
     afterCap();
   }, () => {});
 })();
+/* ---------------- Lilliana: agendar reuniones en Meet ---------------- */
+const CAL = 'Google Calendar', GMAIL = 'Gmail', ME = 'luisdavid.rodriguez@holcim.com';
+let TOOLS_OK = null;
+async function toolsOk(){
+  if(TOOLS_OK !== null) return TOOLS_OK;
+  try { const lim = SAMPLE && SAMPLE.limits ? await SAMPLE.limits() : null; TOOLS_OK = !!(lim && lim.tools && MCP); } catch(e){ TOOLS_OK = false; }
+  return TOOLS_OK;
+}
+function payloadOf(res){ let p = res && (res.payload !== undefined ? res.payload : res); if(typeof p === 'string'){ try { p = JSON.parse(p); } catch(e){} } return p; }
+const isoLocal = s => { const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/); return m ? `${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:00` : null; };
+function fmtSlot(isoA, isoB){
+  const a = new Date(isoA), b = new Date(isoB);
+  const t = d => d.toLocaleTimeString('es-CR', {hour:'numeric', minute:'2-digit', timeZone:'America/Costa_Rica'});
+  const day = a.toLocaleDateString('es-CR', {weekday:'short', day:'numeric', month:'numeric', timeZone:'America/Costa_Rica'});
+  return `${day} de ${t(a)} a ${t(b)}`;
+}
+const validEmail = e => /^[^\s@<>"']+@[^\s@<>"']+\.[a-z]{2,}$/i.test(String(e || '').trim());
+function schedTools(a){
+  return [
+    {name:'buscar_contacto',
+     description:'Busca en el Gmail de Luis David el correo de una persona por su nombre. Devuelve hasta 5 coincidencias {nombre, correo, veces}. Úsala antes de buscar horarios, y confirma con Luis David el correo si hay dudas.',
+     inputSchema:{type:'object', properties:{nombre:{type:'string', description:'Nombre y, si se sabe, apellido de la persona'}}, required:['nombre']},
+     async execute(input, ctx){
+       const nombre = String(input.nombre || '').trim(); if(!nombre) throw new Error('Falta el nombre');
+       const toks = norm(nombre).split(/\s+/).filter(t => t.length > 1);
+       const res = await MCP.callTool(GMAIL, 'search_threads', {query:`${nombre} newer_than:365d`, pageSize:25, view:'THREAD_VIEW_METADATA_ONLY'}, {signal:ctx.signal});
+       const p = payloadOf(res), hits = {};
+       const add = (name, email) => { email = String(email || '').toLowerCase().trim(); if(!validEmail(email) || email === ME) return; const key = norm(name + ' ' + email.replace(/[._@]/g, ' ')); if(!toks.every(t => key.includes(t))) return; const h = hits[email] || (hits[email] = {nombre:name || '', correo:email, veces:0}); h.veces++; if(name && !h.nombre) h.nombre = name; };
+       (p && p.threads || []).forEach(th => (th.messages || []).forEach(m => {
+         (m.addressDisplayNames || []).forEach(x => add(x.displayName, x.emailAddress));
+         [m.sender, ...(m.toRecipients || []), ...(m.ccRecipients || [])].forEach(e => add('', e));
+       }));
+       const out = Object.values(hits).sort((x, y) => y.veces - x.veces).slice(0, 5);
+       return out.length ? out : `No encontré a "${nombre}" en el correo del último año. Pídele a Luis David el correo.`;
+     }},
+    {name:'buscar_horarios',
+     description:'Busca en Google Calendar los espacios libres en común de Luis David y los invitados. Devuelve una lista de espacios (inicio y fin en hora de Costa Rica). Fechas en formato AAAA-MM-DD.',
+     inputSchema:{type:'object', properties:{correos:{type:'array', items:{type:'string'}}, duracion_min:{type:'number'}, desde:{type:'string', description:'AAAA-MM-DD'}, hasta:{type:'string', description:'AAAA-MM-DD'}, hora_inicio:{type:'string', description:'HH:mm, por defecto 07:00'}, hora_fin:{type:'string', description:'HH:mm, por defecto 17:00'}}, required:['correos', 'desde', 'hasta']},
+     async execute(input, ctx){
+       const correos = (Array.isArray(input.correos) ? input.correos : []).map(String).map(s => s.trim().toLowerCase()).filter(validEmail);
+       if(!correos.length) throw new Error('Faltan correos válidos de los invitados');
+       const d1 = String(input.desde || '').slice(0, 10), d2 = String(input.hasta || '').slice(0, 10);
+       if(!/^\d{4}-\d{2}-\d{2}$/.test(d1) || !/^\d{4}-\d{2}-\d{2}$/.test(d2)) throw new Error('Fechas en formato AAAA-MM-DD');
+       const h1 = /^\d{2}:\d{2}$/.test(input.hora_inicio || '') ? input.hora_inicio : '07:00', h2 = /^\d{2}:\d{2}$/.test(input.hora_fin || '') ? input.hora_fin : '17:00';
+       const dur = Math.max(15, Math.min(480, Number(input.duracion_min) || 60));
+       const res = await MCP.callTool(CAL, 'suggest_time', {attendeeEmails:[ME, ...correos.filter(e => e !== ME)], startTime:`${d1}T${h1}:00`, endTime:`${d2}T${h2}:00`, durationMinutes:dur, preferences:{startHour:h1, endHour:h2, excludeWeekends:true, pageSize:10}}, {signal:ctx.signal});
+       const slots = (payloadOf(res) || {}).timeSlots || [];
+       return slots.length ? {duracion_min:dur, espacios:slots.map(s => ({inicio:isoLocal(s.startTime), fin:isoLocal(s.endTime), minutos:s.durationMinutes, texto:fmtSlot(s.startTime, s.endTime)}))} : 'No hay espacios libres en común en ese rango. Propón otro rango o menos invitados.';
+     }},
+    {name:'proponer_reunion',
+     description:'Muestra a Luis David una tarjeta con la reunión lista para crear en Meet, con un botón "Agendar en Meet". NO crea nada: la reunión solo se crea si él pulsa el botón. Úsala cuando él ya eligió el horario. Horas en formato AAAA-MM-DDTHH:mm, hora de Costa Rica.',
+     inputSchema:{type:'object', properties:{titulo:{type:'string'}, descripcion:{type:'string'}, correos:{type:'array', items:{type:'string'}}, inicio:{type:'string'}, fin:{type:'string'}}, required:['titulo', 'correos', 'inicio', 'fin']},
+     execute(input){
+       const correos = (Array.isArray(input.correos) ? input.correos : []).map(String).map(s => s.trim().toLowerCase()).filter(e => validEmail(e) && e !== ME);
+       const ini = isoLocal(input.inicio), fin = isoLocal(input.fin);
+       if(!correos.length) throw new Error('Faltan correos válidos');
+       if(!ini || !fin || fin <= ini) throw new Error('Horas inválidas: usa AAAA-MM-DDTHH:mm y que el fin sea después del inicio');
+       const c = chatOf(a.id);
+       c.proposal = {titulo:String(input.titulo || 'Reunión').slice(0, 150), descripcion:String(input.descripcion || '').slice(0, 1500), correos, inicio:ini, fin, status:'pending'};
+       if(CUR === a.id) renderMsgs(a);
+       return 'Tarjeta mostrada. Dile a Luis David que revise los datos y pulse "Agendar en Meet". No digas que ya está agendada.';
+     }}
+  ];
+}
+function proposalCard(a, c){
+  const p = c.proposal; if(!p) return null;
+  const el = document.createElement('div'); el.className = 'meetcard';
+  const when = fmtSlot(p.inicio + '-06:00', p.fin + '-06:00');
+  const st = p.status;
+  el.innerHTML = `<div class="mc-h"><span class="mc-ic">${ICON.cal}</span><b></b></div>
+    <dl><dt>Cuándo</dt><dd class="w"></dd><dt>Invitados</dt><dd class="g"></dd>${p.descripcion ? '<dt>Detalle</dt><dd class="d"></dd>' : ''}<dt>Lugar</dt><dd>Google Meet (enlace automático)</dd></dl>
+    <div class="mc-act"></div>`;
+  el.querySelector('b').textContent = p.titulo;
+  el.querySelector('.w').textContent = when;
+  el.querySelector('.g').textContent = p.correos.join(', ');
+  if(p.descripcion) el.querySelector('.d').textContent = p.descripcion;
+  const act = el.querySelector('.mc-act');
+  if(st === 'pending' || st === 'error'){
+    if(st === 'error'){ const e = document.createElement('p'); e.className = 'mc-err'; e.textContent = p.err || 'No se pudo crear.'; act.appendChild(e); }
+    const go = document.createElement('button'); go.type = 'button'; go.className = 'lvbtn'; go.textContent = 'Agendar en Meet';
+    const no = document.createElement('button'); no.type = 'button'; no.className = 'lvbtn ghost'; no.textContent = 'Cancelar';
+    go.addEventListener('click', () => createMeeting(a)); no.addEventListener('click', () => { c.proposal = null; c.turns.push({role:'assistant', content:'Listo, no la agendé.'}); renderMsgs(a); });
+    act.append(go, no);
+  } else if(st === 'creating'){ act.innerHTML = '<span class="lv wait"><i></i>Creando la reunión…</span>'; }
+  else if(st === 'done'){
+    const ok = document.createElement('p'); ok.className = 'mc-ok'; ok.textContent = 'Agendada e invitaciones enviadas.'; act.appendChild(ok);
+    [['Abrir en Calendar', p.htmlLink], ['Unirse por Meet', p.meet]].forEach(([t, u]) => { if(u && /^https:\/\//.test(u)){ const l = document.createElement('a'); l.className = 'btn'; l.href = u; l.target = '_blank'; l.rel = 'noopener'; l.textContent = t; act.appendChild(l); } });
+  }
+  return el;
+}
+async function createMeeting(a){
+  const c = chatOf(a.id), p = c.proposal; if(!p || p.status === 'creating' || p.status === 'done') return;
+  p.status = 'creating'; renderMsgs(a);
+  try {
+    const res = await MCP.callTool(CAL, 'create_event', {summary:p.titulo, description:(p.descripcion ? p.descripcion + '\n\n' : '') + 'Agendada por Lilliana (Oficina HMS).', startTime:p.inicio, endTime:p.fin, attendees:p.correos.map(email => ({email})), addGoogleMeetUrl:true, notificationLevel:'ALL'}, {cache:false});
+    const ev = payloadOf(res) || {};
+    p.htmlLink = ev.htmlLink || ''; p.meet = ev.conferenceUrl || ev.hangoutLink || ((ev.conferenceData && ev.conferenceData.entryPoints || []).find(x => x.entryPointType === 'video') || {}).uri || '';
+    p.status = 'done';
+    c.turns.push({role:'assistant', content:`Listo: agendé **${p.titulo}** el ${fmtSlot(p.inicio + '-06:00', p.fin + '-06:00')} con ${p.correos.join(', ')}.${p.meet ? ' Enlace de Meet: ' + p.meet : ''}`});
+  } catch(e){
+    p.status = 'error';
+    const code = e && e.code;
+    p.err = code === 'not_in_manifest' || code === 'not_granted' ? 'Esta página no tiene permiso para crear eventos en tu calendario. Revísalo en el menú Permisos del artefacto.' : code === 'needs_reauth' ? 'Tu conexión con Google Calendar venció: reconéctala en claude.ai → Configuración → Conectores.' : code === 'server_not_connected' ? 'Agrega Google Calendar en claude.ai → Configuración → Conectores.' : 'No se pudo crear la reunión. Revisa tu calendario antes de reintentar, por si sí se creó.';
+  }
+  renderMsgs(a);
+}
+function schedRules(){
+  const t = new Date(), iso = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+  return `\n\nAgendar reuniones en Meet (tienes herramientas). Hoy es ${DAYS_L[t.getDay()]} ${iso}. 1) Si Luis David quiere una reunión, pregunta solo lo que falte: tema, con quién, duración (por defecto 60 min) y rango de fechas (por defecto los próximos 5 días hábiles, de 7:00 a 17:00). 2) Usa buscar_contacto para el correo de cada persona; si hay varias coincidencias o ninguna, pregúntale cuál es. 3) Usa buscar_horarios y muéstrale como máximo 6 opciones, agrupadas por día. 4) Cuando elija, usa proponer_reunion con un título claro y una descripción breve del tema. 5) Nunca digas que la reunión ya está agendada: solo se crea cuando él pulsa "Agendar en Meet" en la tarjeta. No muevas ni canceles reuniones existentes.`;
+}
 /* ---------------- Datos en vivo desde Google Sheets ---------------- */
 const SHEETS = 'Google Sheets';
 const IN_P = {spreadsheetId:'1XfGCRN1upZsfr0ZAN2Lp-w_dHbUpBMMfcPjOKhY7ysU', range:'Pendientes!A1:L300'};
