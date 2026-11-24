@@ -294,19 +294,19 @@ const STATUS = {
   idle:{t:'Por configurar', c:'var(--idle)', w:'#99a3b0'}
 };
 const AGENTS = [
-  { id:'enrique', name:'Enrique', role:'Coordinador del equipo', status:'idle', statusText:'Por configurar', where:'Sala de juntas',
-    desc:'Supervisa a los demás agentes, revisa que cada uno entregue a tiempo y te manda un solo resumen cada mañana, con semáforo por agente.',
-    next:'Se configura cuando haya al menos dos agentes trabajando. Su sala de juntas ya está lista.',
+  { id:'enrique', name:'Enrique', role:'Coordinador del equipo', status:'work', statusText:'Activo · revisión los viernes', where:'Sala de juntas',
+    desc:'Supervisa a los demás agentes, revisa que cada uno actualice su hoja a tiempo y te manda un resumen semanal del equipo cada viernes.',
+    next:'Que las rutinas corran con conectores desde otra PC (pendiente #23), para no depender de la conversación de la Oficina.', sheet:'12iGuR50ZkpP_5z6r3SGvvY_mdszMIOgQLZdHIN7dvRo', sheetName:'Tablero del equipo',
     folder:'1VWBxhnIp1AlamWIr1BCvp_-a7F2RacWh', ficha:'1jY_5-zhESX16kkgk7ne5u2wGtZff6sRbpdISPfsaiUo',
     look:{torso:'#2c3d66', print:'suit', legs:'#262a33', hair:'short', hairColor:'#a3a8b0', glasses:true}, items:[] },
-  { id:'jeniffer', name:'Jeniffer', role:'No conformidades', status:'idle', statusText:'Por configurar', where:'Café',
+  { id:'jeniffer', name:'Jeniffer', role:'No conformidades', status:'work', statusText:'Activa · revisión los lunes', where:'Café',
     desc:'Da seguimiento a cada no conformidad hasta su cierre: revisa responsable, acción correctiva, fecha y evidencia.',
-    next:'Dime dónde se registran las no conformidades (AppSheet o Sheet) para conectarla.',
+    next:'Que Luis David explique el proceso de cierre con Karla y Lilliana, y confirmar las 10 NC que no están en la carpeta oficial.', sheet:'1wS4PLJvqa1mB88KMMH7nCuV-gvzciZxKNz63mma4ML8', sheetName:'Control de no conformidades',
     folder:'1nx6K_AsCuYALCcktZ1fgsuWYRptjUb7U', ficha:'1T09xupq3rjzdMmkXCkKSmJUU3o8oZKoDjiK1ADm1b2o',
     look:{torso:'#3a97d6', print:'check', legs:'#2d3a57', hair:'long', hairColor:'#5a3424', female:true}, items:[] },
-  { id:'lilliana', name:'Lilliana', role:'Correos y pendientes', status:'work', statusText:'Activa · bajo demanda', where:'Oficina, en su escritorio',
+  { id:'lilliana', name:'Lilliana', role:'Correos y pendientes', status:'work', statusText:'Activa · revisión diaria 6:33 a. m.', where:'Oficina, en su escritorio',
     desc:'Lee tus correos de los últimos 14 días, arma la lista de pendientes con fechas y te dice qué está vencido, qué vence hoy y qué viene esta semana.',
-    next:'Falta programar su revisión automática de las 6:33 a. m. Mientras tanto, pídeme "actualiza a Lilliana".',
+    next:'Que la rutina corra con conectores desde otra PC (pendiente #23). Hoy corre de lunes a viernes dentro de la conversación de la Oficina.',
     folder:'1Dcpzaj95S4q7eFJ_61f6jeyscePEd8SC', ficha:'1_ekshqn6Wqyg1Rnlsb_dqt6uS7ChaQ2S_4z6PqsGYo4', sheet:'1XfGCRN1upZsfr0ZAN2Lp-w_dHbUpBMMfcPjOKhY7ysU', sheetName:'Lista de pendientes',
     look:{torso:'#7a5bd4', print:'mail', legs:'#2f2f37', hair:'long', hairColor:'#2a1c18', female:true},
     items:[
@@ -316,9 +316,9 @@ const AGENTS = [
       {t:'Autoevaluación de desempeño 2026', d:null, n:'Confirmar la fecha límite'},
       {t:'Personal: próxima visita al Hospital Metropolitano', d:null}
     ]},
-  { id:'ezequiel', name:'Ezequiel', role:'Inventarios de planta', status:'ready', statusText:'Ficha y hoja listas', where:'Oficina, en su escritorio',
+  { id:'ezequiel', name:'Ezequiel', role:'Inventarios de planta', status:'work', statusText:'Activo · revisión los lunes', where:'Oficina, en su escritorio',
     desc:'Compara el inventario del sistema con los conteos físicos, explica cada diferencia y prepara los ajustes para tu aprobación.',
-    next:'Responder tres preguntas: en qué sistema está el inventario, qué diferencia es relevante y quién aprueba los ajustes.',
+    next:'Revisar las fórmulas rotas (#REF!) del AUXILIAR de noviembre antes de enviar el ajuste, y aclarar la cifra del tubo 600x2.50.',
     folder:'1PwKVpO33iNUR2Jm7zLt1DINlJFCpjUib', ficha:'14KFv4Ov3LgzfBOnNV9GcoMhOFmXVJjEvRQLahD4zLHw', sheet:'1UsshQVTwSX_14XJ59JhlfzKI_jAceGGakVTEvMI4j9I', sheetName:'Control de diferencias',
     look:{torso:'#6f7884', tone:'#f37a1d', print:'vest', legs:'#3a5a90', hair:'helmet', hairColor:'#ffcf1f'},
     items:[
@@ -332,9 +332,9 @@ const AGENTS = [
       {t:'Remito 344490915: 8 tubos facturados sin retirar', d:'2026-12-05'},
       {t:'Auditoría externa EY', d:'2026-12-07', n:'Eres el responsable de apoyo'}
     ]},
-  { id:'alejandro', name:'Alejandro', role:'AppSheets y órdenes de cambio', status:'idle', statusText:'Por configurar', where:'Zona de descanso',
+  { id:'alejandro', name:'Alejandro', role:'AppSheets y órdenes de cambio', status:'work', statusText:'Activo · revisión los lunes', where:'Zona de descanso',
     desc:'Cuida que las apps de AppSheet funcionen, que los datos estén limpios y que cada orden de cambio o problema reportado tenga seguimiento.',
-    next:'Conectar las tablas de AppSheet de órdenes de cambio para que revise plazos y alertas.',
+    next:'Que Luis David apruebe las correcciones propuestas y recupere el permiso de edición del Check List Losa Lex.', sheet:'1OFJdMYm4IqBn4-LFqtU7Du5l9NCjDiqUMVQBUUifrQE', sheetName:'Revisión de AppSheets',
     folder:'1c-ZGcMfDPSj0k38cA7bMuWe9wuaDCkfK', ficha:'1YYOgChpSrq2oKOlFtMDwjERti9nsHFvqZHSeduiWyGs',
     look:{torso:'#138a7e', print:'app', legs:'#a88f63', hair:'short', hairColor:'#231a15'},
     items:[
@@ -344,9 +344,9 @@ const AGENTS = [
       {t:'Revisar la alerta de plazo defectuosa de OC-18', d:null},
       {t:'Formulario "Autorización de chorrea" que reenvió Guillermo', d:null}
     ]},
-  { id:'fabiola', name:'Fabiola', role:'Dashboards e indicadores', status:'idle', statusText:'Por configurar', where:'Zona de descanso',
-    desc:'Revisa que cada dashboard tenga datos al día, detecta cifras raras y propone indicadores nuevos.',
-    next:'Indicar qué dashboards usa la planta y en qué herramienta están (Looker Studio, Power BI o Sheets).',
+  { id:'fabiola', name:'Fabiola', role:'Dashboards e indicadores', status:'work', statusText:'Activa · actualiza el dashboard los lunes', where:'Zona de descanso',
+    desc:'Actualiza cada semana la base de datos del dashboard Centro de Operaciones HMS (solo lo autorizado), revisa que los indicadores cuadren y propone indicadores nuevos.',
+    next:'Primera actualización el lunes 30/11; el lunes 7/12 pone las fórmulas de diciembre. Falta el detalle completo de Datos SAP.', sheet:'1bKR69pBASaKb_uuYsScHAsd6RsV-1w4pnsm3cte5G4w', sheetName:'Control de dashboards',
     folder:'13Zw9KHAjWTgm9elMcE4xV3Ogq6pnltL0', ficha:'1AjKnpSyeMGzP2R-cDuoCNQhHMnp0RUycYQ5D-9tKQYg',
     look:{torso:'#cf4a7f', print:'chart', legs:'#2a2a31', hair:'bun', hairColor:'#c9902f', female:true},
     items:[
@@ -469,15 +469,14 @@ const MONTHS_L = ['enero','febrero','marzo','abril','mayo','junio','julio','agos
 const fmtLong = s => { const d = pd(s); return `${DAYS_L[d.getDay()]} ${d.getDate()} de ${MONTHS_L[d.getMonth()]}`; };
 const EXTRA = {
   enrique:[
-    'Estado del equipo: Lilliana está activa bajo demanda (revisa el correo cuando Luis David se lo pide). Ezequiel tiene su ficha y su hoja de control listas. Jeniffer, Alejandro y Fabiola están por configurar. Tú, Enrique, te configuras cuando haya al menos dos agentes trabajando.',
-    'Fechas clave: viernes 5 de diciembre, límite para enviar los ajustes de inventario de noviembre (las solicitudes de baja van hasta el día 5 de cada mes); lunes 7 de diciembre, auditoría externa de EY, donde Luis David es el responsable de apoyo.',
-    'Reuniones: lunes 23 a la 1:00 p. m., levantamiento de requerimientos de identificación con código; martes 24 a las 3:00 p. m., cotización de etiquetas; miércoles 25 a las 11:00 a. m., Comité de inventarios HMS.'
+    'Las rutinas del equipo: Lilliana de lunes a viernes a las 6:33 a. m.; Jeniffer (6:47), Alejandro (7:12), Ezequiel (7:38) y Fabiola (7:52) los lunes; tú, Enrique, los viernes a las 7:24. Todas corren dentro de la conversación de la Oficina porque la organización no permite rutinas con conectores en la PC del trabajo.',
+    'Fechas clave: miércoles 25/11 a las 11:00, Comité de inventarios HMS; ajuste de inventario de noviembre (instructivo: 3 días antes del cierre; regla de Luis Martínez: hasta el día 5); lunes 7/12, auditoría externa de EY y primeras fórmulas de diciembre de Fabiola.'
   ],
   jeniffer:[
-    'Todavía no está conectado el registro de no conformidades (NC): no sabes en qué AppSheet o Sheet se registran.',
+    'Carpeta oficial: unidad compartida LA - CR - HMS - OPER › NO CONFORMIDADES HMS, con subcarpetas Nave 1, Nave 2, Nave 3 y Central de mezclado y una carpeta NCMR por NC (registro F-HMS.LB 01.01.02, análisis SOLVE y verificación 01.01.03).',
     'Ojo: en los correos de Kattia Hidalgo, "NC" significa nota de crédito, no no conformidad.',
-    'Osvaldo Cubillo organizó reuniones de no conformidades: "NC\'S" el jueves 12/11 a la 1:30 p. m. y "Seguimiento - NC torón Nave 3" el viernes 13/11 a las 9:00 a. m.',
-    'Karla Villalta implementó el 12/11 el Procedimiento de Control de Calidad y Despacho de Producto Conforme, con un chat de WhatsApp para el filtro final; ya detectaron productos que no debían salir a ruta y oportunidades de mejora en la fijación de cargas.'
+    'Causa repetida: NC13, NC18 y NC26 comparten la falta de un instructivo de vibrado y curado. Luis David es responsable de acciones en la NC18 (hoja de vida) y la NC19 (hoja de vida de losa Lex y límite de 35 cm), cuya verificación venció el 10/09.',
+    'La App Registros de Ingeniería tiene 2 quejas de obra de Prent (10/11 y 19/11, acabados) sin NC.'
   ],
   lilliana:[
     'Revisaste 196 hilos de correo del 9 al 23 de noviembre; ignoraste boletines, promociones, reportes OEE y avisos automáticos.',
@@ -498,16 +497,13 @@ const EXTRA = {
     'La toma física rutinaria del 14/11 cubrió acero, Central de Mezclado y producto terminado.'
   ],
   alejandro:[
-    'Órdenes de cambio en AppSheet (HMS-OC): la OC-03 del proyecto Yara está fuera de plazo y llegan alertas diarias (21, 22 y 23 de noviembre). La OC-04 Yara (20/11) y la OC-02 Alcantarillas Meco (18/11) llegaron como URGENTES y piden confirmar con el botón "Enterado". La OC-01 Barreras Pequeño Mundo Meco ya está finalizada.',
-    'La alerta de la OC-18 (Agromonte) del 10/11 salió con 0.1 horas y sin nombre de etapa ("etapa(s): ."), lo que sugiere un error en la lógica de la alerta.',
-    'Proyecto de tablets: 7 líneas de datos aprobadas. David Ortiz (TI) dice que el proveedor Liberty entrega las SIM entre el miércoles 25 y el jueves 26; después hay que configurar las tablets.',
-    'Guillermo Ordeñana (supervisor de Central de Mezclado) reenvió el 11/11 el formulario "Autorización de chorrea" sin comentario.',
-    'AppSheet también envía por correo los reportes OEE de la Central de Mezclado y las órdenes de mantenimiento (EN PROCESO / CERRADO).'
+    'Revisaste las apps en el editor de AppSheet el 23/11 (sin cambiar nada). Las correcciones solo se proponen: Luis David las aprueba.',
+    'Apps activas: Órdenes de Cambio, OEE, Mantenimiento y Merma HMS (publicadas) y Registros de Ingeniería (web de Apps Script). Check List Losa Lex no está publicada.'
   ],
   fabiola:[
-    'Todavía no sabes qué dashboards usa la planta ni en qué herramienta están.',
-    'Karla Villalta implementó el 12/11 el Procedimiento de Control de Calidad y Despacho de Producto Conforme y propuso como KPI el porcentaje de cargas aprobadas a la primera en el Filtro 3.',
-    'AppSheet envía por correo reportes OEE de la Central de Mezclado; llegaron varios entre el 18 y el 20 de noviembre.'
+    'Base de datos del dashboard: "Control Operativo - Producción, Mantenimiento, Ambiente, Calidad y H&S". Actualizas solo HMS Alajuela, Producción (Nave 1), Produccion Tubos, Producción Losa Lex y Viguetas, Central de Mezclado y Datos SAP, según la pestaña "Actualización semanal" de tu hoja.',
+    'Cada lunes: herrajes procesados (te los da Luis David ya sumados), acero procesado (acumulado del mes, de José Avendaño) y merma de Nave 1 (+ Extras), Tubos y Nave 3 desde Historial Merma HMS sin vagonetas. Primer lunes de cada mes: fórmulas del mes nuevo, FTE y Promedio HH iguales, y pedir la exportación de SAP (sin tocar Ceco limpio ni Monto limpio).',
+    'El dashboard es la página "Centro de Operaciones HMS" (con contraseña). Las mejoras solo se proponen.'
   ]
 };
 function itemLine(it, withAgent){
@@ -544,7 +540,7 @@ function rulesFor(a){
     when,
     summary,
     mine.length ? `Pendientes ${team ? 'de todo el equipo' : 'a tu cargo'}:\n` + mine.map(i => itemLine(i, team)).join('\n') : 'No tienes pendientes registrados.',
-    a.id === 'ezequiel' ? diffLine() : '',
+    a.id === 'ezequiel' ? diffLine() : extLine(a.id),
     (EXTRA[a.id] || []).length ? 'Contexto adicional:\n' + EXTRA[a.id].map(x => '- ' + x).join('\n') : '',
     'Cómo responder: en español de Costa Rica, cálido, directo y breve (unas 120 palabras como máximo, salvo que te pidan un borrador o más detalle). Usa listas cortas con guiones cuando ayuden y **negritas** solo para lo clave; no uses encabezados ni tablas. Usa solo estos datos: si algo no está aquí, dilo con claridad y di qué necesitarías. No inventes fechas, cifras, nombres ni direcciones de correo. No puedes enviar correos ni cambiar sistemas: si te piden un mensaje, entrega un borrador listo para que Luis David lo copie y lo envíe. Si la pregunta es del tema de otro agente, responde lo que puedas y sugiere hablar con ese agente.'
   ].filter(Boolean).join('\n\n');
@@ -569,7 +565,7 @@ function fichaHTML(a){
   let list;
   if(a.id === 'enrique'){
     const max = Math.max(...AGENTS.map(x => x.items.length), 1);
-    list = `<section><h3>Equipo que supervisará</h3><div class="teambars">${AGENTS.filter(x => x.id !== 'enrique').map(x => `<div class="tb">${avatar(x, 26)}<span>${esc(x.name)}</span><i><b style="width:${(x.items.length/max*100).toFixed(0)}%;background:${x.look.tone || x.look.torso}"></b></i><em>${x.items.length}</em></div>`).join('')}</div></section>`;
+    list = `<section><h3>Equipo que supervisa (pendientes por agente)</h3><div class="teambars">${AGENTS.filter(x => x.id !== 'enrique').map(x => `<div class="tb">${avatar(x, 26)}<span>${esc(x.name)}</span><i><b style="width:${(x.items.length/max*100).toFixed(0)}%;background:${x.look.tone || x.look.torso}"></b></i><em>${x.items.length}</em></div>`).join('')}</div></section>`;
   } else if(a.items.length){
     const order = {late:0,today:1,week:2,later:3,none:4};
     const items = a.items.slice().sort((p,q) => order[p.state]-order[q.state] || (p.d||'9').localeCompare(q.d||'9'));
@@ -579,7 +575,7 @@ function fichaHTML(a){
   }
   const links = [`<a class="btn" href="${DRIVE + a.folder}" target="_blank" rel="noopener">Carpeta</a>`, `<a class="btn" href="${DOC + a.ficha}/edit" target="_blank" rel="noopener">Ficha</a>`];
   if(a.sheet) links.push(`<a class="btn pri" href="${SHEET + a.sheet}/edit" target="_blank" rel="noopener">${esc(a.sheetName)}</a>`);
-  return `<p class="desc">${esc(a.desc)}</p>${list}${a.id === 'ezequiel' ? diffHTML() : ''}<section><h3>Siguiente paso</h3><p class="next">${esc(a.next)}</p></section><section><h3>Abrir en Drive</h3><div class="links">${links.join('')}</div></section>`;
+  return `<p class="desc">${esc(a.desc)}</p>${list}${a.id === 'ezequiel' ? diffHTML() : a.id === 'jeniffer' ? ncHTML() : a.id === 'alejandro' ? findHTML('al', 'Hallazgos en las apps') : a.id === 'fabiola' ? findHTML('fa', 'Hallazgos en los dashboards') : a.id === 'enrique' ? teamHTML() : ''}<section><h3>Siguiente paso</h3><p class="next">${esc(a.next)}</p></section><section><h3>Abrir en Drive</h3><div class="links">${links.join('')}</div></section>`;
 }
 function chatHTML(a){
   return `<div class="chat">
@@ -823,6 +819,98 @@ function diffHTML(){
     <ul class="items">${top.map(r => `<li><div class="row"><span class="st ${r.dif < 0 ? 'late' : 'later'}">${fmtSigned(r.dif)}</span><span class="tx"><p>${esc(r.desc)}</p><small>${esc(r.mat)} · sistema ${esc(r.sys)} · físico ${esc(r.fis)}${r.estado ? ' · ' + esc(r.estado) : ''}</small></span></div></li>`).join('')}</ul></section>`;
 }
 
+/* ---- Hojas de Jeniffer, Alejandro, Fabiola y Enrique (en vivo) ---- */
+const IN_NC = {spreadsheetId:'1wS4PLJvqa1mB88KMMH7nCuV-gvzciZxKNz63mma4ML8', range:'NC!A1:K150'};
+const IN_AL = {spreadsheetId:'1OFJdMYm4IqBn4-LFqtU7Du5l9NCjDiqUMVQBUUifrQE', range:'Hallazgos!A1:J120'};
+const IN_FA = {spreadsheetId:'1bKR69pBASaKb_uuYsScHAsd6RsV-1w4pnsm3cte5G4w', range:'Hallazgos!A1:H80'};
+const IN_EN = {spreadsheetId:'12iGuR50ZkpP_5z6r3SGvvY_mdszMIOgQLZdHIN7dvRo', range:'Equipo!A1:H12'};
+const NC_SNAP = [["NC07", "Nave 2", "Hallazgo en tubería de concreto 600 mm", "Entregada – esperando recibido", "Luis David", "11/11/2026"], ["NC08", "Nave 2", "Reclamo de cliente: tubería 1350 mm", "Entregada – esperando recibido", "Luis David", "24/09/2026"], ["NC10", "Nave 2", "Reclamo de cliente CONANSA: tubería 1500 mm", "Entregada – esperando recibido", "Luis David", "24/09/2026"], ["NC11", "Nave 2", "Reclamo de cliente FRAME: 4 tubos 600 mm × 2.5 m rechazados (fisuras, deformaciones, reparaciones)", "Abierta", "Marvin Murillo", "08/10/2026"], ["NC13", "Nave 1", "Oquedades en acabado de columna Kermode (vibrado inadecuado; producción 17/06)", "Abierta", "Por definir", "07/09/2026"], ["NC18", "Nave 1", "Fisuras en 11 vigas de puente María Aguilar", "En verificación", "Karla Villalta", "08/09/2026"], ["NC19", "Nave 3", "Losas Lex del proyecto Pharma: torón expuesto y fisuras tras el corte (informe FSA)", "En verificación", "Karla Villalta", "11/08/2026"], ["NC21", "Nave 1", "Herrajes: ruptura de trazabilidad entre ingeniería, planta y montaje", "Abierta", "Karla Villalta", "24/09/2026"], ["NC22", "Central de mezclado", "Receta equivocada en la Meka (sin aditivo): viga de amarre SPH Pharma descartada", "En verificación", "Marvin Murillo", "10/09/2026"], ["NC23", "Nave 2", "Producto con deficiencias: tubería 1800 mm (certificado)", "Abierta", "Por definir", "09/10/2026"], ["NC26", "Nave 1", "Hormiguero en viga portón, proyecto Prent (03/11): el ingeniero estructural pidió rehacer el elemento", "Abierta", "Por definir", "11/11/2026"], ["Sin #", "Nave 3", "NC torón Nave 3", "Abierta", "Por definir", "13/11/2026"], ["NC04", "Por confirmar", "Hallazgo en acabado de viga puente", "Por confirmar", "", "22/09/2026"], ["NC05", "Por confirmar", "Hallazgo: fisura en viguetas", "Por confirmar", "", "22/09/2026"], ["NC09", "Por confirmar", "Losa Lex – Multitenant", "Por confirmar", "", "22/09/2026"], ["NC12", "Por confirmar", "Tubería 1800 mm con armadura expuesta", "Por confirmar", "", "22/09/2026"], ["NC14", "Por confirmar", "Columna C3ssb: izaje", "Por confirmar", "", "22/09/2026"], ["NC15", "Central de mezclado", "Hallazgo en central de mezclado", "Por confirmar", "", "28/09/2026"], ["NC17", "Nave 1", "Repetición de columna Kermode", "Por confirmar", "", "22/09/2026"], ["NC20", "Nave 1", "Viga de amarre sin herrajes caída en proyecto", "Por confirmar", "", "22/09/2026"], ["NC24", "Por confirmar", "Fisuras en losa de entrepiso Kermode (versión firmada 09/10)", "Por confirmar", "", "09/10/2026"], ["NC25", "Por confirmar", "Hormigueros en nudos de unión viga–columna (versión firmada 04/11)", "Por confirmar", "", "04/11/2026"]];
+const AL_SNAP = [["1", "Órdenes de Cambio", "La fila de HMS-OC: 03 (Yara) no se borró: se vació (fila 4). El cambio ocurrió entre el 20/11 19:35 UTC y el 23/11 17:03 UTC; no se sabe quién porque…", "Alta", "Abierto"], ["2", "Órdenes de Cambio", "la fórmula de Alerta_SLA solo compara una etapa contra su límite cuando esa etapa ya tiene horas registradas; las etapas pendientes nunca se evalúan.…", "Alta", "Abierto"], ["3", "Órdenes de Cambio", "Solo hay acuses de Osvaldo Cubillo (OC-01, OC-02) y Marvin Murillo (OC-03, OC-04). No hay ningún \"Enterado\" de Luis David.", "Media", "Abierto"], ["4", "Órdenes de Cambio", "Formatos mezclados en los impactos: OC-01 usa \"NA\" y OC-04 usa \"N/D\"; Impacto_Presupuesto se guarda como texto (\"6,009$\").", "Media", "Abierto"], ["5", "Órdenes de Cambio", "Plano_Final_Link apunta a una búsqueda de Drive en vez del archivo. La pestaña Leeme lista estados que la app no usa (Nueva, Aplicada, Cerrada). La…", "Baja", "Abierto"], ["6", "OEE", "Disponibilidad = Horas_Operando / (Tiempo_Asignado − Horas_Paro_Planeado). El código X05 (\"Sin demanda / sin programación\") está marcado como…", "Alta", "Abierto"], ["7", "OEE", "Desempeño 39.5%: la tabla Estandares usa 10.5 m³/h para todos los productos de Meka 1, Meka 2 y Besser, incluida Losa Lex. Además, los horímetros de…", "Alta", "Abierto"], ["8", "OEE", "Datos desactualizados: el reporte 14 de Besser muestra 0 h de paro aunque tiene 150 minutos registrados, y el reporte 21 no aparece.", "Media", "Abierto"], ["9", "Mantenimiento", "Nadie en Personal tiene correo, así que el valor inicial de Técnico (LOOKUP(USEREMAIL(), …)) nunca se llena solo. Todos los reportes los registran…", "Media", "Abierto"], ["10", "Mantenimiento", "Num_Orden 5916257 tiene 7 dígitos (reporte fe9aa9d7; las demás tienen 8). El reporte 4a6a5c3a tiene 12 h ordinarias en un día sin horas extra. En los…", "Media", "Abierto"], ["11", "Mantenimiento", "La tabla Averias está vacía: los 3 bots de averías nunca se han disparado y las fallas se registran como \"Reporte de falla\". Los 4 bots se llaman New…", "Baja", "Abierto"], ["12", "Merma HMS", "no hay ninguna validación contra pesajes duplicados (Fecha, Equipo, Tarro y Peso 1 sin Valid_If; la llave es UNIQUEID()). Duplicados: 9ce46097 y…", "Alta", "Abierto"], ["13", "Merma HMS", "e9d63a29 (07/10, N103): en Peso 1 se escribió 715, que es el peso del tarro. Netos muy bajos que pueden ser error de tara: c89a7ec7 (25 kg), 4a342799…", "Media", "Abierto"], ["14", "Check List Losa Lex", "la app no está publicada (sigue en Prototype; última edición real 20/08). Tu cuenta solo puede leer la hoja y su carpeta (cambio del 25/09) y la app…", "Alta", "Abierto"], ["15", "Registros de Ingeniería", "No es AppSheet: es una web de Google Apps Script que guarda en la pestaña DATA. Funciona (5 ejecuciones completadas en 7 días). Detalles: los IDs…", "Media", "Abierto"], ["16", "Registros de Ingeniería", "Las quejas de obra HMS-10 y HMS-11 (Prent, acabados, 10/11 y 19/11) no generaron NC ni aviso a Calidad.", "Media", "Abierto"], ["17", "Todas", "13 apps a tu nombre: 5 activas (Registros de Ingeniería es Apps Script), Check List Losa Lex sin publicar, 2 por confirmar y el resto inactivas o de…", "Baja", "Abierto"]];
+const FA_SNAP = [["1", "OEE HMS", "Disponibilidad de Meka 2 en 100.01%: el código X05 (\"Sin demanda / sin programación\") cuenta como paro planeado, así que Meka 2 sale en 100% aunque…", "Alta", "Abierto"], ["2", "OEE HMS", "El OEE consolidado (34.9%) y el desempeño (39.5%) no son confiables: Estandares usa 10.5 m³/h para todos los productos de Meka 1, Meka 2 y Besser…", "Alta", "Abierto"], ["3", "OEE HMS", "\"Mes anterior - Oct\" sale vacío (0 horas) para todos los equipos: los datos de octubre se borraron como pruebas (respaldos del 2 al 7/10). El…", "Baja", "Abierto"], ["4", "Órdenes de Cambio", "Los impactos se guardan como texto (\"6,009$\", \"NA\", \"N/D\"): no se pueden sumar en un dashboard de órdenes de cambio.", "Media", "Abierto"], ["5", "Calidad", "El KPI \"% de cargas aprobadas a la primera en Filtro 3\" (Karla, 12/11) todavía no está en ningún dashboard.", "Media", "Abierto"], ["6", "Varios", "Hay dashboards duplicados o vacíos: 2 copias de HS_Indicadores_EHS, \"Indicadores Tv\" vacía y un Power BI de inventarios sin cambios desde julio.", "Baja", "Abierto"]];
+const EN_SNAP = [
+  ['Lilliana','Completa','Diaria lun–vie 6:33 a. m.','25 pendientes: 23 abiertos, 4 vencidos (#6, #7, #15, #24)','OC-03 Yara fuera de plazo; Enterado de OC-02 vencido; tus acciones en NC19 vencidas'],
+  ['Jeniffer','Completa','Lunes 6:47 a. m.','22 NC: 6 abiertas, 3 en verificación, 3 esperando el recibido de Karla, 10 por confirmar','NC13, NC18 y NC26 con la misma causa; NC23 sin análisis; NC22 con acciones vencidas'],
+  ['Ezequiel','Completa','Lunes 7:38 a. m.','Noviembre: 99.16% de confiabilidad total, Central de Mezclado 89.46%','AUXILIAR de noviembre con fórmulas rotas (#REF!); tubo 600x2.50 sin aclarar'],
+  ['Alejandro','Completa','Lunes 7:12 a. m.','13 apps (5 activas); 17 hallazgos, 6 de severidad Alta','OC-03 vaciada; bot de plazos; OEE; Check List Losa Lex sin publicar; Merma sin validación'],
+  ['Fabiola','Completa','Lunes 7:52 a. m.','Base de datos del dashboard definida; primeras fórmulas de diciembre el lun 7/12','OEE no confiable (X05, redondeo, estándares, horímetros)'],
+  ['Enrique','Completa','Viernes 7:24 a. m.','Supervisa a los 5 agentes','—']
+];
+const mkNC = r => ({nc:r[0], area:r[1], desc:r[2], estado:r[3], resp:r[4], ult:parseDate(r[5])});
+const mkF = r => ({n:r[0], app:r[1], h:r[2], sev:r[3], estado:r[4]});
+const mkE = r => ({ag:r[0], conf:r[1], auto:r[2], sit:r[3], al:r[4]});
+const EXT = {
+  nc:{inp:IN_NC, snap:() => NC_SNAP.map(mkNC), rows:null, live:false, sig:''},
+  al:{inp:IN_AL, snap:() => AL_SNAP.map(mkF), rows:null, live:false, sig:''},
+  fa:{inp:IN_FA, snap:() => FA_SNAP.map(mkF), rows:null, live:false, sig:''},
+  en:{inp:IN_EN, snap:() => EN_SNAP.map(mkE), rows:null, live:false, sig:''}
+};
+Object.values(EXT).forEach(x => { x.rows = x.snap(); });
+const EXT_OF = {jeniffer:'nc', alejandro:'al', fabiola:'fa', enrique:'en'};
+function parseNC(values){
+  const hi = headerIndex(values, 'nc'); if(hi < 0) return null;
+  const H = values[hi], c = {nc:colOf(H, 'nc'), area:colOf(H, 'area'), desc:colOf(H, 'descripcion'), estado:colOf(H, 'estado'), resp:colOf(H, 'responsable'), ult:colOf(H, 'ultimo')};
+  if(c.nc < 0 || c.estado < 0) return null;
+  return values.slice(hi + 1).filter(r => cellOf(r, c.nc)).map(r => ({nc:cellOf(r, c.nc), area:cellOf(r, c.area), desc:cellOf(r, c.desc), estado:cellOf(r, c.estado), resp:cellOf(r, c.resp), ult:parseDate(cellOf(r, c.ult))}));
+}
+function parseFind(values){
+  const hi = headerIndex(values, 'hallazgo'); if(hi < 0) return null;
+  const H = values[hi], c = {n:colOf(H, '#'), app:colOf(H, 'app', 'dashboard'), h:colOf(H, 'hallazgo'), sev:colOf(H, 'severidad'), estado:colOf(H, 'estado')};
+  if(c.h < 0) return null;
+  return values.slice(hi + 1).filter(r => cellOf(r, c.h)).map(r => { const h = cellOf(r, c.h).replace(/^Confirmad[oa][^:]*:\s*/, ''); return {n:cellOf(r, c.n), app:cellOf(r, c.app), h:h.length > 150 ? h.slice(0, 150).replace(/\s+\S*$/, '') + '…' : h, sev:cellOf(r, c.sev), estado:cellOf(r, c.estado)}; });
+}
+function parseTeam(values){
+  const hi = headerIndex(values, 'agente'); if(hi < 0) return null;
+  const H = values[hi], c = {ag:colOf(H, 'agente'), conf:colOf(H, 'configuracion'), auto:colOf(H, 'automatizacion'), sit:colOf(H, 'situacion'), al:colOf(H, 'alertas')};
+  if(c.ag < 0) return null;
+  return values.slice(hi + 1).filter(r => cellOf(r, c.ag)).map(r => ({ag:cellOf(r, c.ag), conf:cellOf(r, c.conf), auto:cellOf(r, c.auto), sit:cellOf(r, c.sit), al:cellOf(r, c.al)}));
+}
+const EXT_PARSE = {nc:parseNC, al:parseFind, fa:parseFind, en:parseTeam};
+function applyExt(k, values){
+  const x = EXT[k], sig = JSON.stringify(values);
+  if(sig === x.sig && x.live) return;
+  const rows = EXT_PARSE[k](values); if(!rows) return;
+  x.sig = sig; x.rows = rows; x.live = true;
+  const owner = Object.keys(EXT_OF).find(id => EXT_OF[id] === k);
+  if(selected === owner && TAB === 'ficha'){ const keep = panel.scrollTop; renderAgent(byId(owner)); panel.scrollTop = keep; }
+}
+function resetExt(k){ const x = EXT[k]; x.rows = x.snap(); x.live = false; x.sig = ''; }
+const srcTag = k => `<span class="src">${EXT[k].live ? 'en vivo' : 'foto 24 nov'}</span>`;
+const isOpenNC = r => norm(r.estado) !== 'cerrada';
+const daysSince = iso => iso ? Math.max(0, Math.round((todayRef() - pd(iso)) / 864e5)) : null;
+function ncHTML(){
+  const rows = EXT.nc.rows.filter(isOpenNC);
+  if(!rows.length) return `<section><h3>No conformidades ${srcTag('nc')}</h3><p class="empty">No hay NC abiertas.</p></section>`;
+  const by = s => rows.filter(r => norm(r.estado).startsWith(s)).length;
+  const stale = rows.filter(r => (daysSince(r.ult) || 0) > 15).length;
+  const order = s => norm(s).startsWith('abierta') ? 0 : norm(s).startsWith('en verif') ? 1 : norm(s).startsWith('entregada') ? 2 : 3;
+  const top = rows.slice().sort((a, b) => order(a.estado) - order(b.estado) || (daysSince(b.ult) || 0) - (daysSince(a.ult) || 0)).slice(0, 6);
+  return `<section><h3>No conformidades ${srcTag('nc')}</h3>
+    <p class="sub" style="margin:0 0 8px">${plural(rows.length, 'NC', 'NC')} · ${plural(by('abierta'), 'abierta', 'abiertas')} · ${by('en verif')} en verificación · ${by('entregada')} esperando recibido · <b>${stale}</b> con más de 15 días sin avance</p>
+    <ul class="items">${top.map(r => { const d = daysSince(r.ult); return `<li><div class="row"><span class="st ${d > 15 ? 'late' : 'later'}">${esc(r.nc)}</span><span class="tx"><p>${esc(r.desc)}</p><small>${esc(r.area)} · ${esc(r.estado)}${r.resp ? ' · ' + esc(r.resp) : ''}${d != null ? ' · ' + d + ' días sin avance' : ''}</small></span></div></li>`; }).join('')}</ul></section>`;
+}
+const sevCls = s => norm(s) === 'alta' ? 'late' : norm(s) === 'media' ? 'week' : 'later';
+function findHTML(k, title){
+  const rows = EXT[k].rows.filter(r => !/^(resuelto|descartado)/.test(norm(r.estado)));
+  if(!rows.length) return `<section><h3>${title} ${srcTag(k)}</h3><p class="empty">No hay hallazgos abiertos.</p></section>`;
+  const alta = rows.filter(r => norm(r.sev) === 'alta').length;
+  const rank = s => norm(s) === 'alta' ? 0 : norm(s) === 'media' ? 1 : 2;
+  const top = rows.slice().sort((a, b) => rank(a.sev) - rank(b.sev)).slice(0, 6);
+  return `<section><h3>${title} ${srcTag(k)}</h3>
+    <p class="sub" style="margin:0 0 8px">${plural(rows.length, 'hallazgo abierto', 'hallazgos abiertos')} · <b>${alta}</b> de severidad Alta</p>
+    <ul class="items">${top.map(r => `<li><div class="row"><span class="st ${sevCls(r.sev)}">${esc(r.sev || '—')}</span><span class="tx"><p>${esc(r.h)}</p><small>#${esc(r.n)} · ${esc(r.app)}${r.estado ? ' · ' + esc(r.estado) : ''}</small></span></div></li>`).join('')}</ul></section>`;
+}
+function teamHTML(){
+  const rows = EXT.en.rows;
+  return `<section><h3>Estado del equipo ${srcTag('en')}</h3><ul class="items">${rows.map(r => { const a = AGENTS.find(x => norm(x.name) === norm(r.ag)); return `<li><div class="row"><span class="st ${norm(r.conf) === 'completa' ? 'later' : 'week'}">${esc(r.conf || '—')}</span><span class="tx"><p>${a ? avatar(a, 18) + ' ' : ''}<b>${esc(r.ag)}</b> · ${esc(r.sit)}</p><small>${esc(r.auto)}${r.al && r.al !== '—' ? ' · Alertas: ' + esc(r.al) : ''}</small></span></div></li>`; }).join('')}</ul></section>`;
+}
+function extLine(id){
+  const k = EXT_OF[id]; if(!k) return '';
+  const fuente = EXT[k].live ? 'en vivo de su hoja' : 'foto del 24 de noviembre';
+  if(k === 'nc') return `No conformidades (${fuente}; alcance: Nave 1, Nave 2, Nave 3 y Central de mezclado; una NC se cierra cuando Karla da el recibido): ` + EXT.nc.rows.filter(isOpenNC).map(r => `${r.nc} (${r.area}) ${r.desc}: ${r.estado}${r.resp ? ', responsable ' + r.resp : ''}${r.ult ? ', ' + daysSince(r.ult) + ' días sin avance' : ''}`).join('; ') + '.';
+  if(k === 'en') return `Estado del equipo (${fuente}): ` + EXT.en.rows.map(r => `${r.ag}: configuración ${r.conf}; rutina ${r.auto}; ${r.sit}; alertas: ${r.al}`).join(' | ') + '.';
+  return `Hallazgos abiertos (${fuente}): ` + EXT[k].rows.filter(r => !/^(resuelto|descartado)/.test(norm(r.estado))).map(r => `#${r.n} ${r.app} [${r.sev}] ${r.h}`).join('; ') + '.';
+}
+
 const LIVE = {status:'snapshot', msg:'', action:null, at:null, unsub:[], busy:false, sigP:'', sigD:''};
 let MCP = null, PERMS = null;
 const hhmm = ms => { const d = new Date(ms); let h = d.getHours(); const m = String(d.getMinutes()).padStart(2, '0'); const ap = h < 12 ? 'a. m.' : 'p. m.'; h = h % 12 || 12; return `${h}:${m} ${ap}`; };
@@ -913,6 +1001,7 @@ function applyDiffs(values){
   if(selected === 'ezequiel' && TAB === 'ficha'){ const keep = panel.scrollTop; renderAgent(byId('ezequiel')); panel.scrollTop = keep; }
 }
 function revertSnapshot(){
+  Object.keys(EXT).forEach(resetExt);
   DIFFS = DIFFS_SNAP; DIFFS_LIVE = false; LIVE.sigD = '';
   if(DATA.mode === 'snapshot') return;
   AGENTS.forEach(a => { a.items = SNAP_ITEMS[a.id].map(x => ({...x})); });
@@ -944,6 +1033,7 @@ function startWatch(){
   try {
     LIVE.unsub.push(MCP.watchTool(SHEETS, 'get_values', IN_P, ev => onEvent('p', ev), WOPTS));
     LIVE.unsub.push(MCP.watchTool(SHEETS, 'get_values', IN_D, ev => onEvent('d', ev), WOPTS));
+    Object.keys(EXT).forEach(k => LIVE.unsub.push(MCP.watchTool(SHEETS, 'get_values', EXT[k].inp, ev => onEvent(k, ev), WOPTS)));
   } catch(e){ stopWatch(); setLive('error', 'No se pudo leer la hoja ahora. Intenta de nuevo.', 'retry'); }
 }
 function stopWatch(){ LIVE.unsub.forEach(u => { try { u(); } catch(e){} }); LIVE.unsub = []; }
@@ -955,7 +1045,8 @@ function onEvent(kind, ev){
     if(kind === 'p'){
       if(values) applyPendientes(values, at);
       else if(DATA.mode !== 'live') setLive('error', 'La hoja de pendientes llegó vacía.', 'retry');
-    } else if(values) applyDiffs(values);
+    } else if(kind === 'd'){ if(values) applyDiffs(values); }
+    else if(values) applyExt(kind, values);
     return;
   }
   handleErr(kind, ev.error);
@@ -975,6 +1066,7 @@ function handleErr(kind, e){
   LIVE.busy = false;
   if(code === 'not_granted' || code === 'capability_disabled' || code === 'capability_removed'){ stopWatch(); revertSnapshot(); setLive('snapshot'); return; }
   if(code === 'user_changed'){ stopWatch(); return; }
+  if(EXT[kind] && code !== 'not_granted' && code !== 'capability_disabled' && code !== 'capability_removed'){ if(DENIALS[code]) resetExt(kind); return; }
   if(DENIALS[code]){
     if(kind === 'd'){ DIFFS = DIFFS_SNAP; DIFFS_LIVE = false; LIVE.sigD = ''; return; }
     revertSnapshot(); setLive('error', DENIALS[code][0], DENIALS[code][1]);
@@ -1001,7 +1093,7 @@ function refreshNow(){
   if(!MCP || LIVE.busy) return;
   if(!LIVE.unsub.length){ oneShot(); return; }
   LIVE.busy = true; renderLive();
-  Promise.all([MCP.invalidate(SHEETS, 'get_values', IN_P), MCP.invalidate(SHEETS, 'get_values', IN_D)]).catch(() => {});
+  Promise.all([IN_P, IN_D, ...Object.values(EXT).map(x => x.inp)].map(inp => MCP.invalidate(SHEETS, 'get_values', inp))).catch(() => {});
   setTimeout(() => { if(LIVE.busy){ LIVE.busy = false; renderLive(); } }, 15000);
 }
 function openPerms(){
